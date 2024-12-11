@@ -45,6 +45,29 @@ async function loadCommands(dir) {
 
 await loadCommands(join(__dirname, 'commands'));
 
+async function loadEvents(dir) {
+  const files = readdirSync(dir, { withFileTypes: true });
+  
+  for (const file of files) {
+    const path = join(dir, file.name);
+    
+    if (file.isDirectory()) {
+      await loadEvents(path);
+    } else if (file.name.endsWith('.js')) {
+      const importPath = path.replace(__dirname, '.').replace(/\\/g, '/');
+      const event = (await import(importPath)).default;
+      
+      if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args));
+      } else {
+        client.on(event.name, (...args) => event.execute(...args));
+      }
+    }
+  }
+}
+
+await loadEvents(join(__dirname, 'events'));
+
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
   
