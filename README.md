@@ -8,4 +8,6 @@
 - find a way to not accidentally ~~upload the bot to github~~ upload my db files.
 - maybe add support for multiple servers???
 
+- role reacts
+
 # Meow :3
