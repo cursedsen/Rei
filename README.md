@@ -2,12 +2,13 @@
 
 - add ability to use commands with user IDs
 - finish unban command
-- add events (i.e message deletion/edit logs)
+- add events (message edits)
 - fun commands :D
 - audit commands
 - find a way to not accidentally ~~upload the bot to github~~ upload my db files.
 - maybe add support for multiple servers???
 
 - role reacts
+- 
 
 # Meow :3
