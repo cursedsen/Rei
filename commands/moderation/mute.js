@@ -82,7 +82,6 @@ export default {
                         title: `You were muted in ${message.guild.name}`,
                         description: `**Duration:** ${timeString}\n**Reason:** ${reason}`,
                         color: 0xFF0000,
-                        timestamp: new Date()
                     }]
                 });
             } catch (dmError) {
