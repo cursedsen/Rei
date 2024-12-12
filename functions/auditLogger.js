@@ -78,8 +78,8 @@ async function logModAction(message, command, targetUser, reason) {
           command.charAt(0).toUpperCase() + command.slice(1)
         }`,
         description: `**Reason**\n${reason || 'No reason provided'}\n\n` +
-          `**Member**\n${targetUser ? `<@${targetUser.id}> | ${targetUser.tag}\n\`${targetUser.id}\`` : 'N/A'}\n\n` +
-          `**Moderator Responsible**\n <@${message.author.id}> | ${message.author.tag}\n\`${message.author.id}\`\n\n` +
+          `**Member**\n${targetUser ? `<@${targetUser.id}> | ${targetUser.tag}\n\`\`\`${targetUser.id}\`\`\`` : 'N/A'}\n` +
+          `**Moderator Responsible**\n <@${message.author.id}> | ${message.author.tag}\n\`\`\`${message.author.id}\`\`\`\n` +
           `**Command Location**\n${message.channel} | [Jump to Message](${message.url})`,
         color: 0x2f3136,
         thumbnail: targetUser?.displayAvatarURL() || null,

@@ -1,3 +1,6 @@
+// THIS SPAMS THE CHANNEL WITH THE WHOLE ASS LOG
+// FIXING IT LATER
+
 import { sendMessage } from '../../functions/reiMessageMaker.js';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
