@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import * as math from 'mathjs';
 import { sendMessage } from './functions/reiMessageMaker.js';
 import { logModAction } from './functions/auditLogger.js';
+import { getServerPrefix } from './functions/serverConfig.js';
 
 config();
 
@@ -37,8 +38,16 @@ async function loadCommands(dir) {
             await loadCommands(path);
         } else if (file.name.endsWith('.js')) {
             const importPath = path.replace(__dirname, '.').replace(/\\/g, '/');
-            const command = (await import(importPath)).default;
-            commands.set(command.name, command);
+            try {
+                const command = (await import(importPath)).default;
+                if (!command || !command.name) {
+                    console.warn(`Warning: Command file ${file.name} does not export a valid command object`);
+                    continue;
+                }
+                commands.set(command.name, command);
+            } catch (error) {
+                console.error(`Error loading command from ${file.name}:`, error);
+            }
         }
     }
 }
@@ -81,7 +90,7 @@ await loadEvents(join(__dirname, 'events'));
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
   
-  const prefix = '.';
+  const prefix = await getServerPrefix(message.guild.id);
   if (!message.content.toLowerCase().startsWith(prefix.toLowerCase())) return;
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);

@@ -1,11 +1,12 @@
+import { getServerConfig } from '../functions/serverConfig.js';
+
 export default {
     name: 'messageUpdate',
     async execute(oldMessage, newMessage) {
         if (oldMessage.author?.bot || !oldMessage.guild || oldMessage.content === newMessage.content) return;
 
-        const logChannel = oldMessage.guild.channels.cache.find(
-            channel => channel.name === 'edits'
-        );
+        const serverConfig = await getServerConfig(oldMessage.guild.id);
+        const logChannel = oldMessage.guild.channels.cache.get(serverConfig.log_channel_edits);
 
         if (!logChannel) return;
 

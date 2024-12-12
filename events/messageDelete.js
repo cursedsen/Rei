@@ -1,11 +1,12 @@
+import { getServerConfig } from '../functions/serverConfig.js';
+
 export default {
     name: 'messageDelete',
     async execute(message) {
         if (message.author?.bot || !message.guild) return;
 
-        const logChannel = message.guild.channels.cache.find(
-            channel => channel.name === 'deletions'
-        );
+        const serverConfig = await getServerConfig(message.guild.id);
+        const logChannel = message.guild.channels.cache.get(serverConfig.log_channel_deletions);
 
         if (!logChannel) return;
 

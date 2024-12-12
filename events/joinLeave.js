@@ -1,11 +1,13 @@
+import { getServerConfig } from '../functions/serverConfig.js';
+
 export default [
     {
         name: 'guildMemberAdd',
         async execute(member) {
-            const logChannel = member.guild.channels.cache.find(
-                channel => channel.name === 'join-leave'
-            );
+            const config = await getServerConfig(member.guild.id);
+            if (!config.log_channel_join_leave) return;
 
+            const logChannel = member.guild.channels.cache.get(config.log_channel_join_leave);
             if (!logChannel) return;
 
             const timestamp = new Date();
@@ -30,10 +32,10 @@ export default [
     {
         name: 'guildMemberRemove',
         async execute(member) {
-            const logChannel = member.guild.channels.cache.find(
-                channel => channel.name === 'join-leave'
-            );
+            const config = await getServerConfig(member.guild.id);
+            if (!config.log_channel_join_leave) return;
 
+            const logChannel = member.guild.channels.cache.get(config.log_channel_join_leave);
             if (!logChannel) return;
 
             const timestamp = new Date();
