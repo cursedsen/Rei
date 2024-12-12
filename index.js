@@ -57,10 +57,20 @@ async function loadEvents(dir) {
       const importPath = path.replace(__dirname, '.').replace(/\\/g, '/');
       const event = (await import(importPath)).default;
       
-      if (event.once) {
-        client.once(event.name, (...args) => event.execute(...args));
+      if (Array.isArray(event)) {
+        event.forEach(e => {
+          if (e.once) {
+            client.once(e.name, (...args) => e.execute(...args));
+          } else {
+            client.on(e.name, (...args) => e.execute(...args));
+          }
+        });
       } else {
-        client.on(event.name, (...args) => event.execute(...args));
+        if (event.once) {
+          client.once(event.name, (...args) => event.execute(...args));
+        } else {
+          client.on(event.name, (...args) => event.execute(...args));
+        }
       }
     }
   }
