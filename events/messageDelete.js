@@ -23,13 +23,13 @@ export default {
                 title: '🗑️ Message Deleted',
                 description: `**Original message posted on**\n${message.createdAt.toUTCString()}\n` +
                     `(<t:${Math.floor(message.createdTimestamp / 1000)}:R>)\n\n` +
-                    `**Author**\n<@${message.author.id}> | ${message.author.tag}\n\`${message.author.id}\`` +
-                    deletedBy + `\n\n` +
+                    `**Author**\n<@${message.author.id}> | ${message.author.tag}\n\`\`\`${message.author.id}\`\`\`\n` +
                     `**Message Location**\n${message.channel}${message.reference ? ` | [In reply to](https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.reference.messageId})` : ''}\n\n` +
                     `**Deleted Message**\n${message.content || 'No text content'}`,
                 color: 0xFF0000,
                 footer: {
-                    text: `Event logged on ${timestamp.toUTCString()} • ${timestamp.toLocaleString()}`
+                    text: `Message ID: ${message.id} • ${timestamp.toLocaleDateString('en-GB')}`,
+                    icon_url: message.author.displayAvatarURL()
                 }
             }]
         });

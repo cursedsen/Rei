@@ -81,7 +81,7 @@ await loadEvents(join(__dirname, 'events'));
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
   
-  const prefix = 'rei please';
+  const prefix = '.';
   if (!message.content.toLowerCase().startsWith(prefix.toLowerCase())) return;
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
