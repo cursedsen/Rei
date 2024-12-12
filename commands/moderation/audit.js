@@ -51,7 +51,7 @@ export default {
             return await sendMessage(message, {
                 title: 'Moderator Audit',
                 description: `**${targetModerator.user.tag}** has not taken any moderation actions.`,
-                color: 0x00FF00,
+                color: 0x2B2D31,
                 thumbnail: targetModerator.user.displayAvatarURL()
             });
         }
