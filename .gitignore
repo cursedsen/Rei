@@ -2,3 +2,6 @@
 .env
 /node_modules
 *.db
+commands/moderation/warn.js
+commands/moderation/audit.js
+commands/moderation/mute.js
