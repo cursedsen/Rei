@@ -30,5 +30,22 @@
     "I do not understand the need for this interaction.",
     "The Commander would find this inefficient.",
     "*blank stare*"
+  ],
+  "status": [
+    "contemplating existence",
+    "following orders",
+    "maintaining silence",
+    "piloting EVA Unit-00",
+    "reading a book alone",
+    "staring at the ceiling",
+    "studying tactical reports",
+    "observing human behavior",
+    "training in simulations",
+    "awaiting the next mission",
+    "analyzing battle data",
+    "questioning purpose",
+    "monitoring systems",
+    "preparing for combat",
+    "maintaining emotional distance"
   ]
 }
