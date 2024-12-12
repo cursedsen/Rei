@@ -9,6 +9,7 @@
 - maybe add support for multiple servers???
 
 - role reacts
-- 
+- multi-server configs
+- multi-server audit logs
 
 # Meow :3
