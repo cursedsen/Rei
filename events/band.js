@@ -1,5 +1,5 @@
 export default {
-    name: 'band',
+    name: 'messageCreate',
     async execute(message) {
         if (message.author.bot) return;
         

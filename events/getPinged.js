@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { sendMessage } from '../functions/reiMessageMaker.js';
 
 export default {
-    name: 'pinged',
+    name: 'messageCreate',
     async execute(message) {
         if (!message.mentions.has(message.client.user) || message.author.bot) return;
 
