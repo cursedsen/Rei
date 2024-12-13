@@ -25,6 +25,7 @@ async function initializeDatabase() {
             log_channel_mod_audit TEXT,
             log_channel_edits TEXT,
             log_channel_deletions TEXT,
+            mute_role TEXT,
             prefix TEXT DEFAULT '.'
         )
     `);
@@ -54,6 +55,7 @@ async function updateServerConfig(guildId, setting, value) {
         'log_channel_mod_audit',
         'log_channel_edits',
         'log_channel_deletions',
+        'mute_role',
         'prefix'
     ];
 

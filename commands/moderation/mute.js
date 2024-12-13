@@ -1,4 +1,5 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
+import { getServerConfig } from '../../functions/serverConfig.js';
 
 export default {
     name: 'mute',
@@ -43,44 +44,55 @@ export default {
                 color: 0xFF0000,
             });
         }
-        if (!args[1]) {
-            return await sendMessage(message, {
-                title: 'Error',
-                description: 'Please specify a duration (e.g. 1h, 30m, 1d).',
-                color: 0xFF0000,
-            });
+
+        const serverConfig = await getServerConfig(message.guild.id);
+        const muteRole = serverConfig.mute_role ? 
+            await message.guild.roles.fetch(serverConfig.mute_role).catch(() => null) : null;
+
+        const timeString = args[1]?.toLowerCase();
+        let duration = 0;
+        let isPermanent = false;
+        
+        if (!timeString || !['m', 'h', 'd'].some(unit => timeString.endsWith(unit))) {
+            if (!muteRole) {
+                return await sendMessage(message, {
+                    title: 'Error',
+                    description: 'No mute role has been set up for permanent mutes. Please set one up using the config command or provide a valid duration (e.g. 1h, 30m, 1d).',
+                    color: 0xFF0000,
+                });
+            }
+            isPermanent = true;
+        } else {
+            if (timeString.endsWith('m')) duration = parseInt(timeString) * 60 * 1000;
+            else if (timeString.endsWith('h')) duration = parseInt(timeString) * 60 * 60 * 1000;
+            else if (timeString.endsWith('d')) duration = parseInt(timeString) * 24 * 60 * 60 * 1000;
+
+            if (isNaN(duration) || duration <= 0) {
+                if (!muteRole) {
+                    return await sendMessage(message, {
+                        title: 'Error',
+                        description: 'Invalid duration and no mute role set up for permanent mutes.',
+                        color: 0xFF0000,
+                    });
+                }
+                isPermanent = true;
+            }
         }
 
-        const timeString = args[1].toLowerCase();
-        let duration = 0;
-        
-        if (timeString.endsWith('m')) duration = parseInt(timeString) * 60 * 1000;
-        else if (timeString.endsWith('h')) duration = parseInt(timeString) * 60 * 60 * 1000;
-        else if (timeString.endsWith('d')) duration = parseInt(timeString) * 24 * 60 * 60 * 1000;
-        else {
-            return await sendMessage(message, {
-                title: 'Error',
-                description: 'Invalid time format. Please use m (minutes), h (hours), or d (days).',
-                color: 0xFF0000,
-            });
-        }
-        if (isNaN(duration) || duration <= 0) {
-            return await sendMessage(message, {
-                title: 'Error',
-                description: 'Please provide a valid positive duration.',
-                color: 0xFF0000,
-            });
-        }
-        const reason = args.slice(2).join(' ') || 'No reason provided';
+        const reason = args.slice(isPermanent ? 1 : 2).join(' ') || 'No reason provided';
 
         try {
-            await target.timeout(duration, reason);
+            if (isPermanent) {
+                await target.roles.add(muteRole);
+            } else {
+                await target.timeout(duration, reason);
+            }
             
             try {
                 await target.send({
                     embeds: [{
                         title: `You were muted in ${message.guild.name}`,
-                        description: `**Duration:** ${timeString}\n**Reason:** ${reason}`,
+                        description: `**Duration:** ${isPermanent ? 'Permanent' : timeString}\n**Reason:** ${reason}`,
                         color: 0xFF0000,
                     }]
                 });
@@ -90,7 +102,7 @@ export default {
             
             await sendMessage(message, {
                 title: 'Done👍',
-                description: `${target.user.tag} was muted for: ${reason}`,
+                description: `${target.user.tag} was ${isPermanent ? 'permanently' : 'temporarily'} muted for: ${reason}`,
                 color: 0x00FF00,
                 timestamp: true
             });
@@ -102,6 +114,5 @@ export default {
                 color: 0xFF0000,
             });
         }
-        console.log(args);
     }
 }
