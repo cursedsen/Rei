@@ -16,7 +16,6 @@ async function initializeDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       case_id TEXT,
       timestamp INTEGER DEFAULT (unixepoch()),
-      unix_timestamp INTEGER DEFAULT (strftime('%s', 'now') * 1000),
       moderator_name TEXT,
       command TEXT,
       target_user_name TEXT,
@@ -36,12 +35,12 @@ async function logModAction(message, command, targetUser, reason) {
     await db.run(`
       INSERT INTO audit_logs (
         case_id,
-        moderator_name, 
-        command, 
-        target_user_name, 
-        reason, 
-        guild_id,
-        unix_timestamp
+        timestamp,
+        moderator_name,
+        command,
+        target_user_name,
+        reason,
+        guild_id
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `, [
       caseId,
@@ -50,7 +49,7 @@ async function logModAction(message, command, targetUser, reason) {
       command,
       targetUser ? `${targetUser.id}` : null,
       reason || 'No reason provided',
-      message.guild.id,
+      message.guild.id
     ]);
 
     const serverConfig = await getServerConfig(message.guild.id);

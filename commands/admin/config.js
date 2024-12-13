@@ -18,16 +18,23 @@ export default {
         if (!args[0]) {
             const config = await getServerConfig(message.guild.id);
             return await sendMessage(message, {
-                title: 'Server Configuration',
-                description: 'Current settings:\n\n' +
-                    `Join/Leave Logs: ${config.log_channel_join_leave || 'Not set'}\n` +
-                    `Mod Audit Logs: ${config.log_channel_mod_audit || 'Not set'}\n` +
-                    `Edit Logs: ${config.log_channel_edits || 'Not set'}\n` +
-                    `Deletion Logs: ${config.log_channel_deletions || 'Not set'}\n` +
-                    `Prefix: ${config.prefix || '.'}\n\n` +
-                    'To configure: `.config <setting> <value>`\n' +
-                    'Available settings: joinleave, modaudit, edits, deletions, prefix',
-                color: 0x00FF00
+                title: '⚙️ Server Configuration',
+                description: [
+                    '**Current Settings**',
+                    '',
+                    `**Join/Leave Logs**\n${config.log_channel_join_leave ? `<#${config.log_channel_join_leave}>` : '`Not set`'}`,
+                    `**Mod Audit Logs**\n${config.log_channel_mod_audit ? `<#${config.log_channel_mod_audit}>` : '`Not set`'}`, 
+                    `**Edit Logs**\n${config.log_channel_edits ? `<#${config.log_channel_edits}>` : '`Not set`'}`,
+                    `**Deletion Logs**\n${config.log_channel_deletions ? `<#${config.log_channel_deletions}>` : '`Not set`'}`,
+                    `**Prefix**\n\`${config.prefix || '.'}\``,
+                    '',
+                    '**Usage**',
+                    '`.config <setting> <value>`',
+                    '',
+                    '**Available Settings**',
+                    '`joinleave`, `modaudit`, `edits`, `deletions`, `prefix`'
+                ].join('\n'),
+                color: 0x2B2D31
             });
         }
 
@@ -71,7 +78,7 @@ export default {
             await sendMessage(message, {
                 title: 'Success',
                 description: `Updated ${setting} setting.`,
-                color: 0x00FF00
+                color: 0x57F287
             });
         } catch (error) {
             console.error(error);
