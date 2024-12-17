@@ -4,6 +4,7 @@ import { User } from 'discord.js';
 export default {
     name: 'ban',
     description: 'Ban a member from the server.',
+    category: 'moderation',
     usage: '<user> [reason]',
     execute: async (message, args) => {
         if (!message.member.permissions.has('BanMembers')) {

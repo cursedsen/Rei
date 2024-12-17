@@ -3,6 +3,7 @@ import { sendMessage } from '../../functions/reiMessageMaker.js';
 export default {
     name: 'unkick',
     description: 'Unkick a member from the server.',
+    category: 'moderation',
     usage: '<user> [reason]',
     execute: async (message, args) => {
         if (!message.member.permissions.has('KickMembers')) {

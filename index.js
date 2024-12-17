@@ -100,7 +100,7 @@ client.on('messageCreate', async message => {
   if (!command) return;
 
   try {
-    await command.execute(message, args);
+    await command.execute(message, args, commands);
     
     if (command.category === 'moderation') {
       const targetUser = message.mentions.users.first();

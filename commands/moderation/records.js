@@ -5,6 +5,7 @@ import { open } from 'sqlite';
 export default {
     name: 'records',
     description: 'View moderation records for a user',
+    category: 'moderation',
     usage: '<user>',
     async execute(message, args) {
         if (!message.member.permissions.has('ModerateMembers')) {

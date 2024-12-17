@@ -2,6 +2,8 @@ import { sendMessage } from '../../functions/reiMessageMaker.js';
 
 export default {
     name: 'avatar',
+    description: 'Shows the avatar of a user',
+    category: 'casual',
     async execute(message) {
         const user = message.mentions.users.first() || message.author;
         const avatarUrl = user.displayAvatarURL({ size: 4096 });

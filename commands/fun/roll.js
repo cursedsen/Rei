@@ -3,6 +3,7 @@ import { sendMessage } from '../../functions/reiMessageMaker.js';
 export default {
     name: 'roll',
     description: 'Roll the dice, because it is so very nice~',
+    category: 'fun',
     usage: '<dice notation>',
     execute: async (message, args) => {
         if (!args.length) {

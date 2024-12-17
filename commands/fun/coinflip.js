@@ -3,6 +3,7 @@ import { sendMessage } from '../../functions/reiMessageMaker.js';
 export default {
     name: 'coinflip',
     description: 'Gambling addiction :3',
+    category: 'fun',
     execute: async (message) => {
         const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
 

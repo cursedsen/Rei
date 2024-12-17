@@ -8,6 +8,7 @@ import { open } from 'sqlite';
 export default {
     name: 'audit',
     description: 'View moderation actions taken by a staff member',
+    category: 'moderation',
     usage: '[user] [page]',
     async execute(message, args) {
         if (!message.member.permissions.has('ModerateMembers')) {

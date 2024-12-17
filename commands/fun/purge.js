@@ -3,6 +3,7 @@ import { sendMessage } from '../../functions/reiMessageMaker.js';
 export default {
     name: 'purge',
     description: 'Purge a specified amount of messages from the channel.',
+    category: 'fun',
     usage: '<amount>',
     execute: async (message, args) => {
         if (!message.member.permissions.has('ManageMessages')) {

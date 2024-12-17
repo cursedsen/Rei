@@ -3,6 +3,7 @@ import { sendMessage } from '../../functions/reiMessageMaker.js';
 export default {
     name: 'echo',
     description: 'Repeats what you say',
+    category: 'fun',
     usage: '<message>',
     execute: async (message, args) => {
         if (!message.member.permissions.has('Administrator')) {
