@@ -4,6 +4,7 @@ import * as math from 'mathjs';
 import { sendMessage } from './functions/reiMessageMaker.js';
 import { logModAction } from './functions/auditLogger.js';
 import { getServerPrefix } from './functions/serverConfig.js';
+import { handleError } from './functions/errorHandler.js';
 
 config();
 
@@ -108,13 +109,16 @@ client.on('messageCreate', async message => {
       await logModAction(message, commandName, targetUser, reason);
     }
   } catch (error) {
-    console.error(error);
-    await sendMessage(message, {
-      title: 'Error',
-      description: 'That is not a valid command.',
-      color: 0xff0000
-    });
+    await handleError(error, message);
   }
+});
+
+client.on('error', (error) => {
+    console.error('Discord client error:', error);
+});
+
+process.on('unhandledRejection', (error) => {
+    console.error('Unhandled promise rejection:', error);
 });
 
 client.login(process.env.TOKEN);

@@ -1,4 +1,5 @@
 import { getServerConfig } from '../functions/serverConfig.js';
+import { handleError } from '../functions/errorHandler.js';
 
 export default [
     {
@@ -12,21 +13,25 @@ export default [
 
             const timestamp = new Date();
 
-            await logChannel.send({
-                embeds: [{
-                    title: '📥 New Member',
-                    description: `**User**\n<@${member.id}> | ${member.user.tag}\n\`${member.id}\`\n\n` +
-                        `**Account Created**\n${member.user.createdAt.toUTCString()}\n` +
-                        `(<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>)`,
-                    color: 0x00FF00,
-                    thumbnail: {
-                        url: member.user.displayAvatarURL()
-                    },
-                    footer: {
-                        text: `Event logged on ${timestamp.toUTCString()} • ${timestamp.toLocaleString()}`
-                    }
-                }]
-            });
+            try {
+                await logChannel.send({
+                    embeds: [{
+                        title: '📥 New Member',
+                        description: `**User**\n<@${member.id}> | ${member.user.tag}\n\`${member.id}\`\n\n` +
+                            `**Account Created**\n${member.user.createdAt.toUTCString()}\n` +
+                            `(<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>)`,
+                        color: 0x00FF00,
+                        thumbnail: {
+                            url: member.user.displayAvatarURL()
+                        },
+                        footer: {
+                            text: `Event logged on ${timestamp.toUTCString()} • ${timestamp.toLocaleString()}`
+                        }
+                    }]
+                });
+            } catch (error) {
+                await handleError(error, { channel: logChannel });
+            }
         }
     },
     {
@@ -48,22 +53,26 @@ export default [
             const kickedBy = executor && kickLog.createdTimestamp > (Date.now() - 5000) ? 
                 `\n\n**Kicked By**\n<@${executor.id}> | ${executor.tag}\n\`${executor.id}\`` : '';
 
-            await logChannel.send({
-                embeds: [{
-                    title: '📤 Member Left',
-                    description: `**User**\n<@${member.id}> | ${member.user.tag}\n\`${member.id}\`\n\n` +
-                        `**Joined Server**\n${member.joinedAt.toUTCString()}\n` +
-                        `(<t:${Math.floor(member.joinedTimestamp / 1000)}:R>)` +
-                        kickedBy,
-                    color: 0xFF0000,
-                    thumbnail: {
-                        url: member.user.displayAvatarURL()
-                    },
-                    footer: {
-                        text: `Event logged on ${timestamp.toUTCString()} • ${timestamp.toLocaleString()}`
-                    }
-                }]
-            });
+            try {
+                await logChannel.send({
+                    embeds: [{
+                        title: '📤 Member Left',
+                        description: `**User**\n<@${member.id}> | ${member.user.tag}\n\`${member.id}\`\n\n` +
+                            `**Joined Server**\n${member.joinedAt.toUTCString()}\n` +
+                            `(<t:${Math.floor(member.joinedTimestamp / 1000)}:R>)` +
+                            kickedBy,
+                        color: 0xFF0000,
+                        thumbnail: {
+                            url: member.user.displayAvatarURL()
+                        },
+                        footer: {
+                            text: `Event logged on ${timestamp.toUTCString()} • ${timestamp.toLocaleString()}`
+                        }
+                    }]
+                });
+            } catch (error) {
+                await handleError(error, { channel: logChannel });
+            }
         }
     }
 ];

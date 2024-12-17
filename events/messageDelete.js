@@ -1,4 +1,5 @@
 import { getServerConfig } from '../functions/serverConfig.js';
+import { PermissionsBitField } from 'discord.js';
 
 export default {
     name: 'messageDelete',
@@ -10,6 +11,11 @@ export default {
 
         if (!logChannel) return;
 
+        if (!logChannel.permissionsFor(logChannel.client.user).has(PermissionsBitField.Flags.SendMessages)) {
+            console.log(`Missing permissions to send messages in channel ${logChannel.name}`);
+            return;
+        }
+
         const timestamp = new Date();
         const fetchedLogs = await message.guild.fetchAuditLogs({
             limit: 1,
@@ -19,20 +25,24 @@ export default {
         const executor = deletionLog?.executor;
         const deletedBy = executor ? `\n\n**Deleted By**\n<@${executor.id}> | ${executor.tag}\n\`${executor.id}\`` : '';
 
-        await logChannel.send({
-            embeds: [{
-                title: '🗑️ Message Deleted',
-                description: `**Original message posted on**\n${message.createdAt.toUTCString()}\n` +
-                    `(<t:${Math.floor(message.createdTimestamp / 1000)}:R>)\n\n` +
-                    `**Author**\n<@${message.author.id}> | ${message.author.tag}\n\`\`\`${message.author.id}\`\`\`\n` +
-                    `**Message Location**\n${message.channel}${message.reference ? ` | [In reply to](https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.reference.messageId})` : ''}\n\n` +
-                    `**Deleted Message**\n${message.content || 'No text content'}`,
-                color: 0xFF0000,
-                footer: {
-                    text: `Message ID: ${message.id} • ${timestamp.toLocaleDateString('en-GB')}`,
-                    icon_url: message.author.displayAvatarURL()
-                }
-            }]
-        });
+        try {
+            await logChannel.send({
+                embeds: [{
+                    title: '🗑️ Message Deleted',
+                    description: `**Original message posted on**\n${message.createdAt.toUTCString()}\n` +
+                        `(<t:${Math.floor(message.createdTimestamp / 1000)}:R>)\n\n` +
+                        `**Author**\n<@${message.author.id}> | ${message.author.tag}\n\`\`\`${message.author.id}\`\`\`\n` +
+                        `**Message Location**\n${message.channel}${message.reference ? ` | [In reply to](https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.reference.messageId})` : ''}\n\n` +
+                        `**Deleted Message**\n${message.content || 'No text content'}`,
+                    color: 0xFF0000,
+                    footer: {
+                        text: `Message ID: ${message.id} • ${timestamp.toLocaleDateString('nl-NL')}`,
+                        icon_url: message.author.displayAvatarURL()
+                    }
+                }]
+            });
+        } catch (error) {
+            console.error('Failed to send message delete notification:', error);
+        }
     }
 };
