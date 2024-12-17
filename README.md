@@ -1,8 +1,6 @@
 ### To Do
 
 - custom icons
-- profile command
-
 - role reacts
 
 # Hello!
