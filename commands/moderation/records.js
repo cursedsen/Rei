@@ -36,13 +36,13 @@ export default {
         }
 
         const db = await open({
-            filename: 'auditLogs.db',
+            filename: './serverData/auditLogs.db',
             driver: sqlite3.Database
         });
 
         const records = await db.all(
             `SELECT * FROM audit_logs 
-             WHERE target_user_id = ? 
+             WHERE target_user_name = ? 
              AND guild_id = ?
              ORDER BY timestamp DESC`,
             [target.id, message.guild.id]
@@ -75,16 +75,16 @@ export default {
         records.forEach(record => {
             const timestamp = new Date(record.timestamp);
             description += `${emojis[record.command] || '📝'} ${record.command.charAt(0).toUpperCase() + record.command.slice(1)}\n`;
-            description += `Case ID: ${record.id}\n`;
-            description += `Moderator: <@${record.moderator_id}>\n`;
-            description += `When: <t:${Math.floor(timestamp.getTime() / 1000)}:R>\n`;
+            description += `Case ID: ${record.case_id}\n`;
+            description += `Moderator: <@${record.moderator_name}>\n`;
+            description += `When: <t:${Math.floor(record.timestamp / 1000)}:R>\n`;
             description += `Reason:\n${record.reason}\n\n`;
         });
 
         await sendMessage(message, {
             title: 'Member Records',
             description: description,
-            color: 0xFFD700,
+            color: 0xFF6B6B,
             timestamp: true,
             thumbnail: target.user.displayAvatarURL()
         });
