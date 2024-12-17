@@ -16,6 +16,7 @@ async function initializeDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       case_id TEXT,
       timestamp INTEGER DEFAULT (unixepoch()),
+      unix_timestamp INTEGER DEFAULT (strftime('%s', 'now') * 1000),
       moderator_name TEXT,
       command TEXT,
       target_user_name TEXT,
@@ -26,6 +27,10 @@ async function initializeDatabase() {
 }
 
 async function logModAction(message, command, targetUser, reason) {
+  const ignoredCommands = ['audit', 'test', 'unkick', 'records'];
+  
+  if (ignoredCommands.includes(command)) return;
+
   try {
     if (!db) await initializeDatabase();
 
