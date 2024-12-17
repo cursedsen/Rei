@@ -1,6 +1,4 @@
-// still does not work
-// fix later
-
+//works now :3 
 import { sendMessage } from '../../functions/reiMessageMaker.js';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
@@ -55,20 +53,31 @@ export default {
         }
 
         try {
+            console.log('Query parameters:', {
+                moderatorId: targetModerator.id,
+                guildId: message.guild.id,
+                page: page,
+                offset: (page - 1) * ITEMS_PER_PAGE
+            });
+
             const totalRecords = await db.get(
                 `SELECT COUNT(*) as count FROM audit_logs 
                  WHERE moderator_name = ? AND guild_id = ?`,
                 [targetModerator.id, message.guild.id]
             );
 
+            console.log('Total records found:', totalRecords);
+
             const records = await db.all(
                 `SELECT * FROM audit_logs 
                  WHERE moderator_name = ? 
                  AND guild_id = ?
-                 ORDER BY unix_timestamp DESC
+                 ORDER BY timestamp DESC
                  LIMIT ? OFFSET ?`,
                 [targetModerator.id, message.guild.id, ITEMS_PER_PAGE, (page - 1) * ITEMS_PER_PAGE]
             );
+
+            console.log('Retrieved records:', records);
 
             if (records.length === 0) {
                 return await sendMessage(message, {
@@ -99,9 +108,11 @@ export default {
                 const emoji = emojis[record.command] || '📝';
                 description += `${emoji} ${record.command.charAt(0).toUpperCase() + record.command.slice(1)}\n`;
                 description += `Case ID: ${record.case_id}\n`;
-                description += `Target: <@${record.target_user_name}>\n`;
-                description += `When: <t:${Math.floor(record.unix_timestamp / 1000)}:R>\n`;
-                description += `Reason:\n${record.reason}\n\n`;
+                if (record.target_user_name) {
+                    description += `Target: <@${record.target_user_name}>\n`;
+                }
+                description += `When: <t:${Math.floor(record.timestamp / 1000)}:R>\n`;
+                description += `Reason:\n${record.reason || 'No reason provided'}\n\n`;
             });
 
             await sendMessage(message, {
@@ -110,7 +121,6 @@ export default {
                 color: 0xFFD700,
                 timestamp: true,
                 thumbnail: targetModerator.user.displayAvatarURL(),
-                footer: { text: `Use ${message.prefix}audit @user [page]` }
             });
         } catch (error) {
             console.error('Database query error:', error);
