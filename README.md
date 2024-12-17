@@ -1,6 +1,5 @@
 ### To Do
 
-- audit commands
 - custom icons
 - profile command
 
