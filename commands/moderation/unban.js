@@ -14,17 +14,19 @@ export default {
             });
         }
 
-        let target = message.mentions.members.first();
-
-        if (!target) {
-            target = await message.guild.members.fetch(args[0]).catch(() => null);
+        if (!args[0]) {
+            return await sendMessage(message, {
+                title: 'Error',
+                description: 'Please provide a valid user tag or ID to unban.',
+                color: 0xFF0000,
+            });
         }
 
+        let target = message.mentions.users.first();
+
         if (!target) {
-            const userId = args[0];
             try {
-                const user = await message.client.users.fetch(userId);
-                target = user;
+                target = await message.client.users.fetch(args[0]);
             } catch (err) {
                 return await sendMessage(message, {
                     title: 'Error',
@@ -40,47 +42,17 @@ export default {
             });
         }
 
-        if (target instanceof User) {
-            try {
-                await message.guild.bans.remove(target);
+        try {
+            await message.guild.bans.remove(target);
 
-                await sendMessage(message, {
-                    title: 'Done👍',
-                    description: `${target.tag} was unbanned.`,
-                    color: 0x00FF00,
-                    timestamp: true,
-                });
-            } catch (error) {
-                console.error(error);
-                await sendMessage(message, {
-                    title: 'Error',
-                    description: 'An error occurred while trying to unban the user.',
-                    color: 0xFF0000,
-                });
-            }
-        } else if (target.moderatable) {
-            const reason = args.slice(1).join(' ') || 'No reason provided';
-            try {
-                await target.ban({ reason: reason });
-
-                await sendMessage(message, {
-                    title: 'Done👍',
-                    description: `${target.user.tag} was unbanned.`,
-                    color: 0x00FF00,
-                    timestamp: true,
-                });
-            } catch (error) {
-                console.error(error);
-                await sendMessage(message, {
-                    title: 'Error',
-                    description: 'An error occurred while trying to unban the user.',
-                    color: 0xFF0000,
-                });
-            }
-        } else {
+            await sendMessage(message, {
+                content: `${target.tag} was unbanned.`,
+            });
+        } catch (error) {
+            console.error(error);
             await sendMessage(message, {
                 title: 'Error',
-                description: 'I cannot unban this user. Please check logs.',
+                description: 'Could not find that user or they are not banned.',
                 color: 0xFF0000,
             });
         }
