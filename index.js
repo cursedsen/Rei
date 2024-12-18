@@ -5,6 +5,7 @@ import { sendMessage } from './functions/reiMessageMaker.js';
 import { logModAction } from './functions/auditLogger.js';
 import { getServerPrefix } from './functions/serverConfig.js';
 import { handleError } from './functions/errorHandler.js';
+import { readFileSync } from 'fs';
 
 config();
 
@@ -19,6 +20,17 @@ const client = new Client({
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.username}`);
+  
+  const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
+  const statusMessages = strings.status;
+  
+  client.user.setStatus('idle');
+  client.user.setActivity(statusMessages[Math.floor(Math.random() * statusMessages.length)], { type: 4 });
+  
+  setInterval(() => {
+    const randomIndex = Math.floor(Math.random() * statusMessages.length);
+    client.user.setActivity(statusMessages[randomIndex], { type: 4 });
+  }, 30 * 1000);
 });
 
 const commands = new Map();
