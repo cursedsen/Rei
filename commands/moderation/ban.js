@@ -1,5 +1,6 @@
 import { sendMessage } from "../../functions/reiMessageMaker.js";
 import { User } from 'discord.js';
+import { readFileSync } from 'fs';
 
 export default {
     name: 'ban',
@@ -50,11 +51,11 @@ export default {
             try {
                 await message.guild.bans.create(target, { reason: reason });
 
+                const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
+                const funnyRandomAction = strings.user_was_x[Math.floor(Math.random() * strings.user_was_x.length)];
+
                 await sendMessage(message, {
-                    title: 'Done👍',
-                    description: `${target.tag} was banned for: ${reason}`,
-                    color: 0x00FF00,
-                    timestamp: true,
+                    content: `${target.tag} was ${funnyRandomAction}`,
                 });
             } catch (error) {
                 console.error(error);
@@ -69,11 +70,11 @@ export default {
             try {
                 await target.ban({ reason: reason });
 
+                const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
+                const funnyRandomAction = strings.user_was_x[Math.floor(Math.random() * strings.user_was_x.length)];
+
                 await sendMessage(message, {
-                    title: 'Done👍',
-                    description: `${target.user.tag} was banned for: ${reason}`,
-                    color: 0x00FF00,
-                    timestamp: true,
+                    content: `${target.user.tag} was ${funnyRandomAction}`,
                 });
             } catch (error) {
                 console.error(error);
