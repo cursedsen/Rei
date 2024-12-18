@@ -73,7 +73,7 @@ export const getServerPrefix = async (guildId) => {
     if (!db) await initializeDatabase();
     
     const config = await getServerConfig(guildId);
-    return config?.prefix?.toLowerCase() || '.';
+    return config?.prefix?.toLowerCase() || '-';
 }
 
 export { getServerConfig, updateServerConfig }; 
