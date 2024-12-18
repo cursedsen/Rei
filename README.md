@@ -5,7 +5,7 @@
 
 # Hello!
 
-__ This is my (Senko's) Discord bot __
+__ This is my (Sen) Discord bot __
 
 - the source is comprehensible, and in plain JS (ESM used, be aware)
 - it can do moderation
