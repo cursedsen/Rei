@@ -8,16 +8,9 @@ export default {
     name: 'audit',
     description: 'View moderation actions taken by a staff member',
     category: 'moderation',
+    permissions: ['ModerateMembers'],
     usage: '[user] [page]',
     async execute(message, args) {
-        if (!message.member.permissions.has('ModerateMembers')) {
-            return await sendMessage(message, {
-                title: 'Error',
-                description: 'You do not have permission to use this command.',
-                color: 0xFF0000
-            });
-        }
-
         let targetModerator;
         if (args[0]) {
             targetModerator = message.mentions.members.first() || 

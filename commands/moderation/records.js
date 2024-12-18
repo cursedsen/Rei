@@ -6,16 +6,9 @@ export default {
     name: 'records',
     description: 'View moderation records for a user',
     category: 'moderation',
+    permissions: ['ModerateMembers'],
     usage: '<user>',
     async execute(message, args) {
-        if (!message.member.permissions.has('ModerateMembers')) {
-            return await sendMessage(message, {
-                title: 'Error',
-                description: 'You do not have permission to use this command.',
-                color: 0xFF0000
-            });
-        }
-
         if (!args[0]) {
             return await sendMessage(message, {
                 title: 'Error',

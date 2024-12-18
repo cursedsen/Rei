@@ -1,4 +1,5 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
+import { isBotMaster } from '../../config/botMasters.js';
 
 export default {
     name: 'echo',
@@ -6,13 +7,14 @@ export default {
     category: 'fun',
     usage: '<message>',
     execute: async (message, args) => {
-        if (!message.member.permissions.has('Administrator')) {
+        if (!isBotMaster(message.author.id)) {
             return await sendMessage(message, {
-                title: 'Error',
-                description: 'You do not have permission to use this command.',
+                title: 'Access Denied',
+                description: 'Only bot masters can use this command.',
                 color: 0xFF0000
             });
         }
+
         if (!args.length) {
             return await sendMessage(message, {
                 title: 'Error',

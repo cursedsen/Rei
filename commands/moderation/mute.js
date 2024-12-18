@@ -5,15 +5,8 @@ export default {
     name: 'mute',
     description: 'Mute a user',
     category: 'moderation',
-    permissions: ['Administrator'],
+    permissions: ['MuteMembers'],
     async execute(message, args) {
-        if (!message.member.permissions.has('MuteMembers')) {
-            return await sendMessage(message, {
-                title: 'Access Denied',
-                description: 'You do not have permission to use this command.',
-                color: 0xFF0000,
-            });
-        }
         if (!args[0]) {
             return await sendMessage(message, {
                 title: 'Error',

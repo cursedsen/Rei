@@ -6,6 +6,7 @@ import { logModAction } from './functions/auditLogger.js';
 import { getServerPrefix } from './functions/serverConfig.js';
 import { handleError } from './functions/errorHandler.js';
 import { readFileSync } from 'fs';
+import { checkPermissions } from './functions/permissionHandler.js';
 
 config();
 
@@ -113,12 +114,14 @@ client.on('messageCreate', async message => {
   if (!command) return;
 
   try {
-    await command.execute(message, args, commands);
-    
-    if (command.category === 'moderation') {
-      const targetUser = message.mentions.users.first();
-      const reason = args.slice(1).join(' ');
-      await logModAction(message, commandName, targetUser, reason);
+    if (await checkPermissions(message, command)) {
+        await command.execute(message, args, commands);
+        
+        if (command.category === 'moderation') {
+            const targetUser = message.mentions.users.first();
+            const reason = args.slice(1).join(' ');
+            await logModAction(message, commandName, targetUser, reason);
+        }
     }
   } catch (error) {
     await handleError(error, message);

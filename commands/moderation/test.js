@@ -6,15 +6,6 @@ export default {
   category: 'moderation',
   permissions: ['Administrator'],
   async execute(message, args) {
-    if (!message.member.permissions.has('Administrator')) {
-      return await sendMessage(message, {
-        title: 'Access Denied',
-        description: 'You do not have permission to use this command.',
-        color: 0xFF0000,
-        timestamp: true
-      });
-    }
-
     await sendMessage(message, {
       title: 'ReiMessageMaker Test Command',
       description: 'Test description',

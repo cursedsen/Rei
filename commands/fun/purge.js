@@ -4,16 +4,9 @@ export default {
     name: 'purge',
     description: 'Purge a specified amount of messages from the channel.',
     category: 'fun',
+    permissions: ['ManageMessages'],
     usage: '<amount>',
     execute: async (message, args) => {
-        if (!message.member.permissions.has('ManageMessages')) {
-            return await sendMessage(message, {
-                title: 'Access Denied',
-                description: 'You do not have permission to use this command.',
-                color: 0xFF0000,
-            });
-        }
-
         const amount = parseInt(args[0]);
 
         if (!amount || isNaN(amount) || amount < 1 || amount > 100) {
