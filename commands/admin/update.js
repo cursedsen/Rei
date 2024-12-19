@@ -1,3 +1,6 @@
+import { isBotMaster } from '../../utils/permissions.js';
+import { sendMessage } from '../../utils/messages.js';
+
 export default {
     name: 'update',
     description: 'Pulls the latest changes from the git repository',
