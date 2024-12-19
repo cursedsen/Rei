@@ -28,22 +28,26 @@ export default {
             
             if (stderr && !stderr.includes('Already up to date')) {
                 console.warn('Git pull warning:', stderr);
-                await message.reply(`Warning: ${stderr}`).catch(err => 
-                    console.error('Failed to send warning message:', err)
-                );
+                await sendMessage(message, {
+                    title: 'Warning',
+                    description: stderr,
+                    color: 0xFFAA00
+                });
                 return;
             }
             
-            await message.reply(`Successfully pulled changes:\n\`\`\`${stdout}\`\`\``).catch(err => 
-                console.error('Failed to send success message:', err)
-            );
+            await sendMessage(message, {
+                title: 'Update Successful',
+                description: stdout,
+                color: 0x00FF00
+            });
         } catch (error) {
             console.error('Git pull error:', error);
-            try {
-                await message.reply(`Failed to execute git pull command: ${error.message}`);
-            } catch (replyError) {
-                console.error('Failed to send error message:', replyError);
-            }
+            await sendMessage(message, {
+                title: 'Update Failed',
+                description: error.message,
+                color: 0xFF0000
+            }).catch(err => console.error('Failed to send error message:', err));
         }
     }
 };
