@@ -27,26 +27,7 @@ async function initializeDatabase() {
             log_channel_deletions TEXT,
             mute_role TEXT,
             prefix TEXT DEFAULT '.'
-        );
-
-        CREATE TABLE IF NOT EXISTS reaction_roles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            guild_id TEXT,
-            channel_id TEXT,
-            message_id TEXT,
-            emoji TEXT,
-            role_id TEXT,
-            FOREIGN KEY (guild_id) REFERENCES server_config(guild_id),
-            UNIQUE(message_id, emoji)
-        );
-
-        CREATE TABLE IF NOT EXISTS reaction_messages (
-            message_id TEXT PRIMARY KEY,
-            guild_id TEXT,
-            channel_id TEXT,
-            description TEXT,
-            FOREIGN KEY (guild_id) REFERENCES server_config(guild_id)
-        );
+        )
     `);
 }
 

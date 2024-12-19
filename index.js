@@ -16,10 +16,7 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.GuildPresences
   ],
-  partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 
 client.on('ready', async () => {
