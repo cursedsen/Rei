@@ -22,7 +22,6 @@ export default {
             title: '🎭 Role Selection',
             description: description,
             color: 0x2B2D31,
-            footer: { text: 'React to get roles!' }
         });
 
         await createReactionMessage(
