@@ -1,9 +1,9 @@
-import { isBotMaster } from '../../utils/permissions.js';
-import { sendMessage } from '../../utils/messages.js';
+import { isBotMaster } from '../../config/botMasters.js';
+import { sendMessage } from '../../functions/reiMessageMaker.js';
 
 export default {
     name: 'update',
-    description: 'Pulls the latest changes from the git repository',
+    description: 'Update Rei',
     async execute(message) {
         if (!isBotMaster(message.author.id)) {
             return await sendMessage(message, {
