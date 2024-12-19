@@ -1,5 +1,7 @@
 import { isBotMaster } from '../../config/botMasters.js';
 import { sendMessage } from '../../functions/reiMessageMaker.js';
+import { promisify } from 'util';
+import { exec } from 'child_process';
 
 export default {
     name: 'update',
@@ -14,8 +16,6 @@ export default {
         }
 
         try {
-            const { promisify } = require('util');
-            const { exec } = require('child_process');
             const execAsync = promisify(exec);
             
             console.log('Attempting git pull...');
