@@ -10,20 +10,21 @@ export default {
             });
         }
 
+        const { promisify } = require('util');
         const { exec } = require('child_process');
+        const execAsync = promisify(exec);
         
         try {
-            exec('git pull', { cwd: process.cwd() }, (error, stdout, stderr) => {
-                if (error) {
-                    return message.reply(`Error: ${error.message}`);
-                }
-                if (stderr) {
-                    return message.reply(`Warning: ${stderr}`);
-                }
-                message.reply(`Successfully pulled changes:\n\`\`\`${stdout}\`\`\``);
-            });
+            const { stdout, stderr } = await execAsync('git pull', { cwd: process.cwd() });
+            
+            if (stderr && !stderr.includes('Already up to date')) {
+                await message.reply(`Warning: ${stderr}`);
+                return;
+            }
+            
+            await message.reply(`Successfully pulled changes:\n\`\`\`${stdout}\`\`\``);
         } catch (error) {
-            message.reply('Failed to execute git pull command.');
+            await message.reply(`Failed to execute git pull command: ${error.message}`);
             console.error('Git pull error:', error);
         }
     }
