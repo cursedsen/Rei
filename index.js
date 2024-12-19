@@ -19,8 +19,11 @@ const client = new Client({
   ],
 });
 
-client.on('ready', () => {
+client.on('ready', async () => {
   console.log(`Logged in as ${client.user.username}`);
+  
+  const startupEvent = (await import('./events/startup.js')).default;
+  await startupEvent.execute(client);
   
   const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
   const statusMessages = strings.status;

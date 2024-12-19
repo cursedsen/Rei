@@ -8,22 +8,18 @@ export default {
         try {
             const firstBotMaster = await client.users.fetch(botMasters[0]);
             if (firstBotMaster) {
-                await sendMessage(firstBotMaster, {
-                    title: '✅ Rei is now online!',
-                    description: [
-                        '**Status:** Ready',
-                        `**Latency:** ${client.ws.ping}ms`,
-                        `**Guild Count:** ${client.guilds.cache.size}`,
-                        `**User Count:** ${client.users.cache.size}`,
-                        `**Channel Count:** ${client.channels.cache.size}`,
-                        '',
-                        '**System Info**',
-                        `**Node:** ${process.version}`,
-                        `**Platform:** ${process.platform}`,
-                        `**Memory Usage:** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`
-                    ].join('\n'),
-                    color: 0x57F287,
-                    timestamp: true
+                const dmChannel = await firstBotMaster.createDM();
+                await sendMessage(dmChannel, {
+                    content: 'Rei is now online!',
+                    embeds: [
+                        {
+                            description: [
+                                '**Status:** Ready',
+                                `**Latency:** ${client.ws.ping}ms`,
+                            ].join('\n'),
+                            color: 0x57F287,
+                        }
+                    ]
                 });
             }
         } catch (error) {
