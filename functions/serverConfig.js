@@ -26,7 +26,7 @@ async function initializeDatabase() {
             log_channel_edits TEXT,
             log_channel_deletions TEXT,
             mute_role TEXT,
-            prefix TEXT DEFAULT '.'
+            prefix TEXT DEFAULT '-'
         )
     `);
 }
