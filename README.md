@@ -1,7 +1,10 @@
 ### To Do
 
-- custom icons
-- role reacts
+- expand on startup event (ping, status, etc)
+- extensive error logging/reporting (important)
+- custom icons (just nice to have tbh)
+- role reacts (!important)
+  
 
 # Hello!
 
