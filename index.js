@@ -1,14 +1,20 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
 import * as math from 'mathjs';
+import { readdirSync } from 'fs';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
 import { sendMessage } from './functions/reiMessageMaker.js';
 import { logModAction } from './functions/auditLogger.js';
 import { getServerPrefix } from './functions/serverConfig.js';
 import { handleError } from './functions/errorHandler.js';
-import { readFileSync } from 'fs';
 import { checkPermissions } from './functions/permissionHandler.js';
 
 config();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const commands = new Map();
 
 const client = new Client({
   intents: [
@@ -18,32 +24,6 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
   ],
 });
-
-client.on('ready', async () => {
-  console.log(`Logged in as ${client.user.username}`);
-  
-  const startupEvent = (await import('./events/startup.js')).default;
-  await startupEvent.execute(client);
-  
-  const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
-  const statusMessages = strings.status;
-  
-  client.user.setStatus('idle');
-  client.user.setActivity(statusMessages[Math.floor(Math.random() * statusMessages.length)], { type: 4 });
-  
-  setInterval(() => {
-    const randomIndex = Math.floor(Math.random() * statusMessages.length);
-    client.user.setActivity(statusMessages[randomIndex], { type: 4 });
-  }, 30 * 1000);
-});
-
-const commands = new Map();
-
-import { readdirSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function loadCommands(dir) {
     const files = readdirSync(dir, { withFileTypes: true });
@@ -68,8 +48,6 @@ async function loadCommands(dir) {
         }
     }
 }
-
-await loadCommands(join(__dirname, 'commands'));
 
 async function loadEvents(dir) {
   const files = readdirSync(dir, { withFileTypes: true });
@@ -102,7 +80,28 @@ async function loadEvents(dir) {
   }
 }
 
-await loadEvents(join(__dirname, 'events'));
+(async () => {
+    await loadCommands(join(__dirname, 'commands'));
+    await loadEvents(join(__dirname, 'events'));
+})();
+
+client.on('ready', async () => {
+  console.log(`Logged in as ${client.user.username}`);
+  
+  const startupEvent = (await import('./events/startup.js')).default;
+  await startupEvent.execute(client);
+  
+  const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
+  const statusMessages = strings.status;
+  
+  client.user.setStatus('idle');
+  client.user.setActivity(statusMessages[Math.floor(Math.random() * statusMessages.length)], { type: 4 });
+  
+  setInterval(() => {
+    const randomIndex = Math.floor(Math.random() * statusMessages.length);
+    client.user.setActivity(statusMessages[randomIndex], { type: 4 });
+  }, 30 * 1000);
+});
 
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
