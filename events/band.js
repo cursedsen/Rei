@@ -1,11 +1,11 @@
 export default {
-    name: 'messageCreate',
+    name: "messageCreate",
     async execute(message) {
         if (message.author.bot) return;
-        
-        if (!message.content.toLowerCase().includes('band')) return;
 
-        const instruments = ['🎸', '🎹', '🥁', '🎺', '🎻', '🎷', '🪘', '🎵'];
+        if (!message.content.toLowerCase().includes("band")) return;
+
+        const instruments = ["🎸", "🎹", "🥁", "🎺", "🎻", "🎷", "🪘", "🎵"];
         const selectedEmojis = [...instruments]
             .sort(() => Math.random() - 0.5)
             .slice(0, 4);
@@ -13,5 +13,5 @@ export default {
         for (const emoji of selectedEmojis) {
             await message.react(emoji);
         }
-    }
+    },
 };
