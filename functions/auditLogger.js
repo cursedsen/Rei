@@ -68,7 +68,8 @@ export async function logModAction(message, command, targetUser, reason) {
                 unban: '🔓',
                 unmute: '🔊',
                 warn: '⚠️',
-                timeout: '⏰'
+                timeout: '⏰',
+                note: '📝'
             };
 
             const emoji = emojis[command] || '🛡️';
@@ -83,6 +84,7 @@ export async function logModAction(message, command, targetUser, reason) {
                         command === 'timeout' ? 'Timed out' :
                         command === 'warn' ? 'Warned' :
                         command === 'kick' ? 'Kicked' :
+                        command === 'note' ? 'Note Added' :
                         command.charAt(0).toUpperCase() + command.slice(1)
                     }`,
                     description: `**Reason**\n${reason || 'No reason provided'}\n\n` +

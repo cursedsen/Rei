@@ -70,7 +70,8 @@ export default {
             unban: '🔓',
             unmute: '🔊',
             warn: '⚠️',
-            timeout: '⏰'
+            timeout: '⏰',
+            note: '📝'
         };
 
         let description = `***${userTag}***\n`;
