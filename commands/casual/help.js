@@ -3,9 +3,34 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from 'dis
 
 export default {
     name: 'help',
-    description: 'Shows all available commands',
+    description: 'Shows all available commands and how to use them',
     category: 'casual',
+    usage: '[command]',
     async execute(message, args, commands) {
+        if (args.length > 0) {
+            const commandName = args[0].toLowerCase();
+            const command = commands.get(commandName);
+
+            if (!command) {
+                return await sendMessage(message, {
+                    title: 'Error',
+                    description: 'That command does not exist.',
+                    color: 0xFF0000
+                });
+            }
+
+            return await sendMessage(message, {
+                title: `Command: ${command.name}`,
+                description: [
+                    `**Description:** ${command.description || 'No description available'}`,
+                    `**Category:** ${command.category.charAt(0).toUpperCase() + command.category.slice(1)}`,
+                    command.usage ? `**Usage:** ${message.prefix}${command.name} ${command.usage}` : `**Usage:** ${message.prefix}${command.name}`,
+                    command.permissions ? `**Required Permissions:** ${command.permissions.join(', ')}` : ''
+                ].join('\n'),
+                color: 0x2B2D31
+            });
+        }
+
         const COMMANDS_PER_PAGE = 8;
         
         const sortedCommands = Array.from(commands.values()).sort((a, b) => {
