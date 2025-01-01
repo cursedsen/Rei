@@ -1,4 +1,5 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
+import { logModAction } from '../../functions/auditLogger.js';
 
 export default {
     name: 'uwu',
@@ -22,6 +23,24 @@ export default {
         } else {
             text = args.join(' ');
         }
+
+        if (/@(everyone|here|&\d+)/.test(text)) {
+            try {
+                await message.member.timeout(5 * 60 * 1000, 'Attempted mention exploitation');
+                
+                await logModAction(message, 'timeout', message.author, 'Attempted mention exploitation in uwu command');
+                
+                await sendMessage(message, {
+                    content: `🤡`,
+                    color: 0xFF0000
+                });
+                return;
+            } catch (error) {
+                console.error('Failed to timeout user:', error);
+            }
+        }
+
+        text = text.replace(/@(everyone|here|&\d+)/g, '@\u200b$1');
 
         let uwuText = text
             .replace(/[lr]/g, 'w')
