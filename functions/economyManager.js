@@ -25,14 +25,13 @@ async function initializeDatabase() {
     await db.exec(`
         CREATE TABLE IF NOT EXISTS game_stats (
             user_id TEXT,
-            guild_id TEXT,
             game_type TEXT,
             games_played INTEGER DEFAULT 0,
             games_won INTEGER DEFAULT 0,
             total_bets INTEGER DEFAULT 0,
             total_winnings INTEGER DEFAULT 0,
             total_losses INTEGER DEFAULT 0,
-            PRIMARY KEY (user_id, guild_id, game_type)
+            PRIMARY KEY (user_id, game_type)
         )
     `);
 
@@ -345,14 +344,14 @@ async function resolveBets(gameId, winnerId) {
         const winnings = won ? bet.bet_amount * 2 : 0;
         
         await db.run(`
-            INSERT INTO game_stats (user_id, guild_id, game_type, total_bets, total_winnings, total_losses)
-            VALUES (?, ?, 'buckshot', 1, ?, ?)
-            ON CONFLICT(user_id, guild_id, game_type) DO UPDATE SET
+            INSERT INTO game_stats (user_id, game_type, total_bets, total_winnings, total_losses)
+            VALUES (?, 'buckshot', 1, ?, ?)
+            ON CONFLICT(user_id, game_type) DO UPDATE SET
             total_bets = total_bets + 1,
             total_winnings = total_winnings + ?,
             total_losses = total_losses + ?
         `, [
-            bet.user_id, bet.guild_id,
+            bet.user_id,
             won ? winnings : 0, won ? 0 : bet.bet_amount,
             won ? winnings : 0, won ? 0 : bet.bet_amount
         ]);
@@ -369,20 +368,20 @@ async function updateGameStats(userId, guildId, won) {
     if (!db) await initializeDatabase();
     
     await db.run(`
-        INSERT INTO game_stats (user_id, guild_id, game_type, games_played, games_won)
-        VALUES (?, ?, 'buckshot', 1, ?)
-        ON CONFLICT(user_id, guild_id, game_type) DO UPDATE SET
+        INSERT INTO game_stats (user_id, game_type, games_played, games_won)
+        VALUES (?, 'buckshot', 1, ?)
+        ON CONFLICT(user_id, game_type) DO UPDATE SET
         games_played = games_played + 1,
         games_won = games_won + ?
-    `, [userId, guildId, won ? 1 : 0, won ? 1 : 0]);
+    `, [userId, won ? 1 : 0, won ? 1 : 0]);
 }
 
 async function getGameStats(userId, guildId) {
     if (!db) await initializeDatabase();
     
     return await db.get(
-        'SELECT * FROM game_stats WHERE user_id = ? AND guild_id = ? AND game_type = ?',
-        [userId, guildId, 'buckshot']
+        'SELECT * FROM game_stats WHERE user_id = ? AND game_type = ?',
+        [userId, 'buckshot']
     ) || {
         games_played: 0,
         games_won: 0,

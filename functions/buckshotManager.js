@@ -1,6 +1,7 @@
 import { Collection } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
-import { useItem, resolveBets, updateGameStats } from './economyManager.js';
+import { useItem, addMoney, getActiveBets } from './economyManager.js';
+import { updateGameStats, updateBettingStats } from './statsManager.js';
 
 const activeGames = new Collection();
 
@@ -8,6 +9,7 @@ class BuckshotGame {
     constructor(channelId, players) {
         this.id = uuidv4();
         this.channelId = channelId;
+        this.guildId = channelId.split('/')[0];
         this.players = players;
         this.currentPlayerIndex = 0;
         this.shells = [];
@@ -174,9 +176,19 @@ class BuckshotGame {
         const winner = this.getWinner();
         if (winner) {
             for (const player of this.players) {
-                await updateGameStats(player.id, this.channelId.split('/')[0], player.id === winner);
+                await updateGameStats(player.id, 'buckshot', player.id === winner);
             }
-            await resolveBets(this.id, winner);
+            
+            const bets = await getActiveBets(this.id);
+            for (const bet of bets) {
+                const won = bet.bet_on_user === winner;
+                await updateBettingStats(bet.user_id, 'buckshot', bet.bet_amount, won);
+                if (won) {
+                    await addMoney(bet.user_id, bet.guild_id, bet.bet_amount * 2);
+                }
+            }
+            
+            await db.run('DELETE FROM active_bets WHERE game_id = ?', this.id);
         }
         return winner;
     }
