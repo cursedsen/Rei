@@ -1,6 +1,5 @@
 import { sendMessage } from "../../functions/reiMessageMaker.js";
 import { isBotMaster } from "../../config/botMasters.js";
-import { exec } from "child_process";
 
 export default {
     name: "restart",
@@ -21,10 +20,6 @@ export default {
             color: 0xffa500,
         });
 
-        exec("pm2 restart all", (error, stdout, stderr) => {
-            if (error) {
-                console.error(`PM2 restart error: ${error}`);
-            }
-        });
+        message.client.destroy();
     },
 };
