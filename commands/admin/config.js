@@ -3,6 +3,7 @@ import {
     updateServerConfig,
     getServerConfig,
 } from "../../functions/serverConfig.js";
+import { isBotMaster } from "../../config/botMasters.js";
 
 export default {
     name: "config",
@@ -10,7 +11,7 @@ export default {
     category: "admin",
     permissions: ["Administrator"],
     async execute(message, args) {
-        if (!message.member.permissions.has("Administrator")) {
+        if (!message.member.permissions.has("Administrator") && !isBotMaster(message.author.id)) {
             return await sendMessage(message, {
                 title: "Error",
                 description:
