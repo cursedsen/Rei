@@ -19,6 +19,20 @@ export default {
         }
 
         const reason = args.slice(1).join(' ') || 'No reason provided';
+        
+        const deletionKeywords = [
+            'nsfw', 'n.s.f.w', 'n s f w', 'explicit',
+            'porn', 'p0rn', 'pr0n', 'adult content',
+            'gore', 'g0re', 'graphic', 'blood',
+            'raid', 'r4id', 'ra1d', 'attack',
+            'scam', 'sc4m', 'fraud', 'phishing',
+            'advertising', 'ads', 'spam', 'promo'
+        ];
+
+        const shouldDeleteMessages = deletionKeywords.some(keyword => 
+            reason.toLowerCase().includes(keyword.toLowerCase())
+        );
+
         let target = message.mentions.members.first() || 
             await message.guild.members.fetch(args[0]).catch(() => null);
 
@@ -32,6 +46,21 @@ export default {
                 userAvatar = user.displayAvatarURL();
 
                 try {
+                    if (shouldDeleteMessages) {
+                        const sixHoursAgo = new Date(Date.now() - (6 * 60 * 60 * 1000));
+                        const messages = await message.channel.messages.fetch({ 
+                            limit: 100,
+                            before: message.id
+                        });
+                        const userMessages = messages.filter(m => 
+                            m.author.id === user.id && 
+                            m.createdAt > sixHoursAgo
+                        );
+                        if (userMessages.size > 0) {
+                            await message.channel.bulkDelete(userMessages);
+                        }
+                    }
+
                     await message.guild.bans.create(user, { reason: reason });
                     
                     const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
@@ -75,6 +104,21 @@ export default {
         }
 
         try {
+            if (shouldDeleteMessages) {
+                const sixHoursAgo = new Date(Date.now() - (6 * 60 * 60 * 1000));
+                const messages = await message.channel.messages.fetch({ 
+                    limit: 100,
+                    before: message.id
+                });
+                const userMessages = messages.filter(m => 
+                    m.author.id === target.id && 
+                    m.createdAt > sixHoursAgo
+                );
+                if (userMessages.size > 0) {
+                    await message.channel.bulkDelete(userMessages);
+                }
+            }
+
             await target.ban({ reason: reason });
 
             const strings = JSON.parse(readFileSync('./things/strings.json', 'utf8'));
