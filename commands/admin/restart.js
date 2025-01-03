@@ -21,5 +21,6 @@ export default {
         });
 
         message.client.destroy();
-    },
+        process.exit(0);
+    }
 };
