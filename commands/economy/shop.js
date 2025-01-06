@@ -7,6 +7,7 @@ export default {
     description: 'View and buy items from the shop',
     category: 'economy',
     usage: '[buy <item_id>]',
+    aliases: ['store', 'buy'],
     async execute(message, args) {
         if (args[0]?.toLowerCase() === 'buy') {
             if (!args[1]) {

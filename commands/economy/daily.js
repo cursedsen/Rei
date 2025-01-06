@@ -5,6 +5,7 @@ export default {
     name: 'daily',
     description: 'Claim your daily reward',
     category: 'economy',
+    
     async execute(message, args) {
         const result = await claimDaily(message.author.id, message.guild.id);
         

@@ -7,6 +7,7 @@ export default {
     description: 'Place a bet on a buckshot roulette game',
     category: 'economy',
     usage: '<amount> <@player>',
+    
     async execute(message, args) {
 
         const game = getGame(message.channel.id);
