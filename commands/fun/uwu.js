@@ -6,6 +6,7 @@ export default {
     description: 'Converts text to uwu speak',
     category: 'fun',
     usage: '<text>',
+    
     execute: async (message, args) => {
         let text;
         if (!args.length) {

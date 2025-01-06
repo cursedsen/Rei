@@ -6,6 +6,7 @@ export default {
     description: 'Convert an image to GIF format',
     category: 'media',
     usage: '<attach image or use on last image>',
+    
     async execute(message, args) {
         let attachment = message.attachments.first();
         

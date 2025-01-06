@@ -44,6 +44,8 @@ async function getServerConfig(guildId) {
         config = await db.get('SELECT * FROM server_config WHERE guild_id = ?', guildId);
     }
     
+    config.defaultPrefixes = ['!', '?', '-'];
+    
     return config;
 }
 
@@ -73,7 +75,10 @@ export const getServerPrefix = async (guildId) => {
     if (!db) await initializeDatabase();
     
     const config = await getServerConfig(guildId);
-    return config?.prefix?.toLowerCase() || '-';
+    return {
+        custom: config.prefix,
+        defaults: ['!', '?', '-']
+    };
 }
 
 export { getServerConfig, updateServerConfig }; 
