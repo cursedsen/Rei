@@ -5,6 +5,7 @@ export default {
     description: 'Ask 8ball a question',
     category: 'fun',
     usage: '<question>',
+    aliases: ['8b', '8'],
     execute: async (message, args) => {
         if (!args.length) {
             return await sendMessage(message, {
