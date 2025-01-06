@@ -43,6 +43,11 @@ async function loadCommands(dir) {
                     continue;
                 }
                 commands.set(command.name, command);
+                if (command.aliases) {
+                    command.aliases.forEach(alias => {
+                        commands.set(alias, command);
+                    });
+                }
             } catch (error) {
                 console.error(
                     `Error loading command from ${file.name}:`,
