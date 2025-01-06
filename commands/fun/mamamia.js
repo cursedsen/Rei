@@ -6,6 +6,7 @@ export default {
     description: "Mama mia's your message",
     category: 'fun',
     usage: '<text>',
+    
     execute: async (message, args) => {
         let text;
         if (!args.length) {

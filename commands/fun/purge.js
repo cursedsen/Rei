@@ -6,6 +6,7 @@ export default {
     category: 'fun',
     permissions: ['ManageMessages'],
     usage: '<amount>',
+    aliases: ['clear', 'delete'],
     execute: async (message, args) => {
         const amount = parseInt(args[0]);
 

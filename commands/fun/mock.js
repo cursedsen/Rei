@@ -6,6 +6,7 @@ export default {
     description: 'cOnVeRtS tExT tO mOcKiNg TeXt',
     category: 'fun',
     usage: '<text>',
+    
     execute: async (message, args) => {
         let text;
         if (!args.length) {
