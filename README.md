@@ -22,7 +22,8 @@
 
    Ensure you have [Node.js](https://nodejs.org/) installed, then run:
 
-   ```npm install
+   ```bash
+   npm install
 
 3. **Configure the Bot**:
 
@@ -35,7 +36,8 @@
 
 4. **Run the Bot**:
 
-   ```node index.js
+   ```bash
+   node index.js
 
 ## Usage
 
