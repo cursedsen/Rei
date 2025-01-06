@@ -4,6 +4,7 @@ export default {
     name: 'encryption',
     description: 'Generate random strings of characters',
     category: 'fun',
+    aliases: ['password', 'pass', 'passgen'],
     execute: async (message, args) => {
         const lines = parseInt(args[0]);
         
