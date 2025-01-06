@@ -6,6 +6,7 @@ export default {
     description: 'Shows all available commands and how to use them',
     category: 'casual',
     usage: '[command]',
+    aliases: ['commands', 'cmds', 'commandlist', 'commandlist'],
     async execute(message, args, commands) {
         if (args.length > 0) {
             const commandName = args[0].toLowerCase();
