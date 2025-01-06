@@ -5,6 +5,7 @@ export default {
     name: 'stats',
     description: 'View your game statistics',
     category: 'economy',
+    aliases: ['statistics', 'stat', 'statistic'],
     async execute(message, args) {
         const stats = await getPlayerStats(message.author.id, 'buckshot');
         const winRate = stats.games_played > 0 
