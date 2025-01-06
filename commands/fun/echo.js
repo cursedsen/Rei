@@ -6,6 +6,7 @@ export default {
     description: 'Repeats what you say',
     category: 'fun',
     usage: '<message>',
+    aliases: ['repeat', 'say'],
     execute: async (message, args) => {
         if (!isBotMaster(message.author.id)) {
             return await sendMessage(message, {
