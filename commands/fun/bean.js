@@ -7,6 +7,7 @@ export default {
     category: 'fun',
     permissions: ['BanMembers'],
     usage: '<user> [reason]',
+    aliases: ['punish', 'troll', 'bange', 'jail'],
     execute: async (message, args) => {
         if (!args[0]) {
             return await sendMessage(message, {
