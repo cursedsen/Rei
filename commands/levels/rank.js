@@ -5,7 +5,7 @@ export default {
     name: 'rank',
     description: 'Check your or another user\'s rank',
     category: 'levels',
-    aliases: ['level', 'xp'],
+    aliases: ['level', 'xp', 'stank'],
     async execute(message, args) {
         const target = message.mentions.users.first() || message.author;
         const rank = await getRank(target.id, message.guild.id);
