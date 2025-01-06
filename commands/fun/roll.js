@@ -5,6 +5,7 @@ export default {
     description: 'Roll the dice, because it is so very nice~',
     category: 'fun',
     usage: '<dice notation>',
+    aliases: ['dice', 'diceroll'],
     execute: async (message, args) => {
         if (!args.length) {
             return await sendMessage(message, {
