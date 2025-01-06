@@ -5,6 +5,7 @@ export default {
     description: 'View profile information for yourself or another user',
     category: 'casual',
     usage: '[user]/[userid]',
+    aliases: ['user', 'userinfo', 'userinfo'],
     async execute(message, args) {
         let target;
         
