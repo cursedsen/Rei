@@ -5,6 +5,7 @@ export default {
     description: 'Shows the avatar of a user.',
     category: 'casual',
     usage: 'avatar [main/server] [user]',
+    aliases: ['av', 'pfp', 'profilepicture'],
     async execute(message, args) {
         const user = message.mentions.users.first() || message.author;
         const member = message.mentions.members.first() || message.member;
