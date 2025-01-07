@@ -32,5 +32,7 @@ export default {
         if (messageLength > 50) bonusXP = 5;
         if (messageLength > 100) bonusXP = 10;
         if (messageLength > 200) bonusXP = 15;
+
+        await addXP(message.author.id, message.guild.id, 15 + bonusXP);
     }
 }; 
