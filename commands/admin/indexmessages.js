@@ -176,15 +176,15 @@ export default {
                     );
 
                     try {
-                        const member = await message.guild.members.fetch(userId);
+                        const member = await message.guild.members.fetch(userId).catch(() => null);
                         if (member) {
                             const existingLevelRoles = levelRoles.map(lr => lr.role_id);
                             await member.roles.remove(existingLevelRoles);
-
+                    
                             const eligibleRoles = levelRoles
                                 .filter(lr => lr.level <= userRank.level)
                                 .map(lr => lr.role_id);
-
+                    
                             if (eligibleRoles.length > 0) {
                                 await member.roles.add(eligibleRoles);
                             }
