@@ -28,12 +28,15 @@ export default {
         if (hasMatch) {
             try {
                 await message.delete();
-                await sendMessage(message.channel, {
-                    content: `<@${message.author.id}> shared:\n\n${content}`
-                });
             } catch (error) {
+                if (error.code === 10008) {
+                    return;
+                }
                 console.error('Error in fixLinks:', error);
             }
+            await sendMessage(message.channel, {
+                content: `<@${message.author.id}> shared:\n\n${content}`
+            });
         }
     }
 };

@@ -75,10 +75,7 @@ export const getServerPrefix = async (guildId) => {
     if (!db) await initializeDatabase();
     
     const config = await getServerConfig(guildId);
-    return {
-        custom: config.prefix,
-        defaults: ['!', '?', '-']
-    };
+    return config.prefix || '-';
 }
 
 export { getServerConfig, updateServerConfig }; 
