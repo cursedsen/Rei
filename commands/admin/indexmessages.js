@@ -1,14 +1,21 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
-import { addXP } from '../../functions/levelSystem.js';
+import { addXP, getRank } from '../../functions/levelSystem.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { join } from 'path';
 
 let database;
+let levelRolesDb;
+
 async function initializeDatabase() {
     database = await open({
         filename: join('./serverData', 'userdata.db'),
+        driver: sqlite3.Database
+    });
+
+    levelRolesDb = await open({
+        filename: join('./serverData', 'levelroles.db'),
         driver: sqlite3.Database
     });
 }
@@ -160,6 +167,32 @@ export default {
                 const totalXP = baseXP + bonusXP;
 
                 await addXP(userId, message.guild.id, totalXP);
+
+                const userRank = await getRank(userId, message.guild.id);
+                if (userRank) {
+                    const levelRoles = await levelRolesDb.all(
+                        'SELECT level, role_id FROM level_roles WHERE guild_id = ? ORDER BY level ASC',
+                        [message.guild.id]
+                    );
+
+                    try {
+                        const member = await message.guild.members.fetch(userId);
+                        if (member) {
+                            const existingLevelRoles = levelRoles.map(lr => lr.role_id);
+                            await member.roles.remove(existingLevelRoles);
+
+                            const eligibleRoles = levelRoles
+                                .filter(lr => lr.level <= userRank.level)
+                                .map(lr => lr.role_id);
+
+                            if (eligibleRoles.length > 0) {
+                                await member.roles.add(eligibleRoles);
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Error updating roles for user ${userId}:`, error);
+                    }
+                }
 
                 processedUsers++;
                 if (processedUsers % 10 === 0) {
