@@ -30,6 +30,31 @@ async function initializeDatabase() {
     `);
 }
 
+const levelColors = {
+    200: '#b5345c',
+    190: '#8f714d',
+    180: '#512335',
+    170: '#ba4fc1',
+    160: '#704fbf',
+    150: '#4b87d2',
+    140: '#44753a',
+    130: '#f3c322',
+    120: '#d05842',
+    110: '#b82941',
+    100: '#78797b',
+    90: '#8f714d',
+    80: '#512335',
+    70: '#ba4fc1',
+    60: '#704fbf',
+    50: '#4b87d2',
+    40: '#44753a',
+    30: '#f3c322',
+    20: '#d05842',
+    15: '#b82941',
+    10: '#b82941',
+    5: '#78797b'
+};
+
 export default {
     name: 'makeroles',
     description: 'Create level roles for the server',
@@ -38,8 +63,7 @@ export default {
     async execute(message, args) {
         if (!db) await initializeDatabase();
 
-        const levelMilestones = [5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 
-                               110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
+        const levelMilestones = Object.keys(levelColors).map(Number).sort((a, b) => a - b);
 
         const progress = await sendMessage(message, {
             description: 'Creating level roles...',
@@ -54,7 +78,7 @@ export default {
                 const roleName = `Level ${level}`;
                 const role = await message.guild.roles.create({
                     name: roleName,
-                    color: `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`,
+                    color: levelColors[level],
                     reason: 'Level role creation'
                 });
 
