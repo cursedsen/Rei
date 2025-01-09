@@ -73,9 +73,10 @@ export async function addXP(userId, guildId, bulkXP = null) {
     );
 
     const now = Date.now();
-    
+
     if (!bulkXP) {
-        if (userData && now - userData.last_message_timestamp < XP_COOLDOWN) {
+        const lastMessageTime = userData?.last_message_timestamp || 0;
+        if (now - lastMessageTime < XP_COOLDOWN) {
             return null;
         }
         bulkXP = BASE_XP + Math.floor(Math.random() * XP_VARIANCE);
