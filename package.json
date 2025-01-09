@@ -1,6 +1,6 @@
 {
   "name": "Rei",
-  "version": "1.3",
+  "version": "1.4",
   "description": "Rei bot",
   "type": "module",
   "author": "sifsen",
@@ -11,10 +11,10 @@
   "dependencies": {
     "discord.js": "14.17.2",
     "dotenv": "16.4.7",
-    "mathjs": "14.0.1",
-    "sharp": "^0.33.5",
-    "sqlite": "5.1.1",
     "sqlite3": "5.1.7",
-    "uuid": "11.0.4"
+    "sqlite": "5.1.1",
+    "uuid": "11.0.4",
+    "mathjs": "14.0.1",
+    "sharp": "0.33.5"
   }
 }
