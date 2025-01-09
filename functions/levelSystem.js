@@ -55,7 +55,7 @@ initializeDatabase();
 const BASE_XP = 15;
 const XP_VARIANCE = 10;
 const XP_COOLDOWN = 60000;
-const LEVEL_SCALING = 1.3;
+const LEVEL_SCALING = 1.1;
 
 function calculateLevel(xp) {
     // using a logarithmic formula for level calculation
