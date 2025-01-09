@@ -52,16 +52,21 @@ async function initializeDatabase() {
 
 initializeDatabase();
 
-const XP_COOLDOWN = 60000; // 1 minute cooldown between xp gains
-const BASE_XP = 15; // xp per message
-const XP_VARIANCE = 10; // random variance in xp
+const BASE_XP = 15;
+const XP_VARIANCE = 10;
+const XP_COOLDOWN = 60000;
+const LEVEL_SCALING = 1.3;
 
 function calculateLevel(xp) {
-    return Math.floor((1 + Math.sqrt(1 + 8 * xp / 50)) / 2) - 1;
+    // using a logarithmic formula for level calculation
+    // level = log(xp/100)/log(LEVEL_SCALING) + 1
+    return Math.floor(Math.log(xp / 100) / Math.log(LEVEL_SCALING) + 1);
 }
 
 function xpForLevel(level) {
-    return Math.floor(50 * (level * (level + 1)) / 2);
+    // inverse of the level calculation
+    // xp= 100 * LEVEL_SCALING^(level-1)
+    return Math.floor(100 * Math.pow(LEVEL_SCALING, level - 1));
 }
 
 export async function addXP(userId, guildId, bulkXP = null) {
