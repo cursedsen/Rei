@@ -52,21 +52,19 @@ async function initializeDatabase() {
 
 initializeDatabase();
 
-const BASE_XP = 15;
-const XP_VARIANCE = 10;
-const XP_COOLDOWN = 60000;
+export const BASE_XP = 15;
+export const XP_VARIANCE = 10;
+export const XP_COOLDOWN = 60000;
 const LEVEL_SCALING = 1.1;
 
 function calculateLevel(xp) {
-    // using a logarithmic formula for level calculation
-    // level = log(xp/100)/log(LEVEL_SCALING) + 1
-    return Math.floor(Math.log(xp / 100) / Math.log(LEVEL_SCALING) + 1);
+
+    return Math.floor((1 + Math.sqrt(1 + 8 * xp / 400)) / 2) - 1;
 }
 
 function xpForLevel(level) {
-    // inverse of the level calculation
-    // xp= 100 * LEVEL_SCALING^(level-1)
-    return Math.floor(100 * Math.pow(LEVEL_SCALING, level - 1));
+
+    return Math.floor(400 * level * (level + 1) / 2);
 }
 
 export async function addXP(userId, guildId, bulkXP = null) {

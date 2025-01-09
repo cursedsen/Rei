@@ -1,5 +1,5 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
-import { addXP, getRank } from '../../functions/levelSystem.js';
+import { addXP, getRank, BASE_XP, XP_VARIANCE } from '../../functions/levelSystem.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
@@ -155,18 +155,39 @@ export default {
         let processedUsers = 0;
         for (const [userId, userData] of userMessages) {
             try {
+                let totalXP = 0;
                 const avgLength = userData.totalLength / userData.count;
-                let xpMultiplier = 1;
                 
-                if (avgLength > 50) xpMultiplier = 1.2;
-                if (avgLength > 100) xpMultiplier = 1.5;
-                if (avgLength > 200) xpMultiplier = 2;
+                for (let i = 0; i < userData.count; i++) {
+                    let messageXP = BASE_XP + Math.floor(Math.random() * XP_VARIANCE);
+                    
+                    if (avgLength > 50) messageXP += 5;
+                    if (avgLength > 100) messageXP += 5;
+                    if (avgLength > 200) messageXP += 5;
+                    
+                    totalXP += messageXP;
+                }
 
-                const baseXP = userData.count * 15;
-                const bonusXP = Math.floor(baseXP * (xpMultiplier - 1));
-                const totalXP = baseXP + bonusXP;
+                console.log(`User ${userId}: ${userData.count} messages, avg length ${avgLength}, total XP ${totalXP}`);
 
                 await addXP(userId, message.guild.id, totalXP);
+
+                processedUsers++;
+                if (processedUsers % 10 === 0) {
+                    await assignProgress.edit({
+                        embeds: [{
+                            title: '📊 Assigning XP',
+                            description: [
+                                `Processing user ${processedUsers}/${userMessages.size}`,
+                                `Messages processed: ${userData.count}`,
+                                `Average message length: ${Math.floor(avgLength)}`,
+                                `XP assigned: ${totalXP.toLocaleString()}`,
+                                'This may take a while...'
+                            ].join('\n'),
+                            color: 0x2b2d31
+                        }]
+                    });
+                }
 
                 const userRank = await getRank(userId, message.guild.id);
                 if (userRank) {
@@ -192,21 +213,6 @@ export default {
                     } catch (error) {
                         console.error(`Error updating roles for user ${userId}:`, error);
                     }
-                }
-
-                processedUsers++;
-                if (processedUsers % 10 === 0) {
-                    await assignProgress.edit({
-                        embeds: [{
-                            title: '📊 Assigning XP',
-                            description: [
-                                `Processing user ${processedUsers}/${userMessages.size}`,
-                                `XP assigned: ${totalXP}`,
-                                'This may take a while...'
-                            ].join('\n'),
-                            color: 0x2b2d31
-                        }]
-                    });
                 }
             } catch (error) {
                 console.error(`Error processing user ${userId}:`, error);
