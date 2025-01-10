@@ -10,6 +10,10 @@ export default {
             .sort(() => Math.random() - 0.5)
             .slice(0, 4);
 
+        if (Math.random() < 0.2) {
+            selectedEmojis.push("<:mayonnaise:1327289665148944434>");
+        }
+
         for (const emoji of selectedEmojis) {
             await message.react(emoji);
         }
