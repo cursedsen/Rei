@@ -1,15 +1,16 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { config } from "dotenv";
-import * as math from "mathjs";
-import { readdirSync } from "fs";
-import { readFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { readFileSync } from "fs";
+import { readdirSync } from "fs";
+import { config } from "dotenv";
 
-import { logModAction } from "./functions/auditLogger.js";
-import { getServerPrefix } from "./functions/serverConfig.js";
-import { handleError } from "./functions/errorHandler.js";
+
 import { checkPermissions } from "./functions/permissionHandler.js";
+import { getServerPrefix } from "./functions/serverConfig.js";
+import { logModAction } from "./functions/auditLogger.js";
+import { handleError } from "./functions/errorHandler.js";
+
 
 config();
 const __dirname = dirname(fileURLToPath(import.meta.url));
