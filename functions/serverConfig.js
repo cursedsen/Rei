@@ -6,19 +6,19 @@ import { join } from 'path';
 let db;
 
 async function initializeDatabase() {
-    const serverDataPath = './serverData';
-    try {
-        await mkdir(serverDataPath, { recursive: true });
-    } catch (error) {
-        if (error.code !== 'EEXIST') throw error;
-    }
+	const serverDataPath = './serverData';
+	try {
+		await mkdir(serverDataPath, { recursive: true });
+	} catch (error) {
+		if (error.code !== 'EEXIST') throw error;
+	}
 
-    db = await open({
-        filename: join(serverDataPath, 'serverConfig.db'),
-        driver: sqlite3.Database
-    });
+	db = await open({
+		filename: join(serverDataPath, 'serverConfig.db'),
+		driver: sqlite3.Database
+	});
 
-    await db.exec(`
+	await db.exec(`
         CREATE TABLE IF NOT EXISTS server_config (
             guild_id TEXT PRIMARY KEY,
             log_channel_join_leave TEXT,
@@ -32,50 +32,50 @@ async function initializeDatabase() {
 }
 
 async function getServerConfig(guildId) {
-    if (!db) await initializeDatabase();
-    
-    let config = await db.get('SELECT * FROM server_config WHERE guild_id = ?', guildId);
-    
-    if (!config) {
-        await db.run(
-            'INSERT INTO server_config (guild_id) VALUES (?)',
-            guildId
-        );
-        config = await db.get('SELECT * FROM server_config WHERE guild_id = ?', guildId);
-    }
-    
-    config.defaultPrefixes = ['!', '?', '-'];
-    
-    return config;
+	if (!db) await initializeDatabase();
+
+	let config = await db.get('SELECT * FROM server_config WHERE guild_id = ?', guildId);
+
+	if (!config) {
+		await db.run(
+			'INSERT INTO server_config (guild_id) VALUES (?)',
+			guildId
+		);
+		config = await db.get('SELECT * FROM server_config WHERE guild_id = ?', guildId);
+	}
+
+	config.defaultPrefixes = ['!', '?', '-'];
+
+	return config;
 }
 
 async function updateServerConfig(guildId, setting, value) {
-    if (!db) await initializeDatabase();
-    
-    const validSettings = [
-        'log_channel_join_leave',
-        'log_channel_mod_audit',
-        'log_channel_edits',
-        'log_channel_deletions',
-        'mute_role',
-        'prefix'
-    ];
+	if (!db) await initializeDatabase();
 
-    if (!validSettings.includes(setting)) {
-        throw new Error('Invalid setting');
-    }
+	const validSettings = [
+		'log_channel_join_leave',
+		'log_channel_mod_audit',
+		'log_channel_edits',
+		'log_channel_deletions',
+		'mute_role',
+		'prefix'
+	];
 
-    await db.run(
-        `UPDATE server_config SET ${setting} = ? WHERE guild_id = ?`,
-        [value, guildId]
-    );
+	if (!validSettings.includes(setting)) {
+		throw new Error('Invalid setting');
+	}
+
+	await db.run(
+		`UPDATE server_config SET ${setting} = ? WHERE guild_id = ?`,
+		[value, guildId]
+	);
 }
 
 export const getServerPrefix = async (guildId) => {
-    if (!db) await initializeDatabase();
-    
-    const config = await getServerConfig(guildId);
-    return config.prefix || '-';
+	if (!db) await initializeDatabase();
+
+	const config = await getServerConfig(guildId);
+	return config.prefix || '-';
 }
 
 export { getServerConfig, updateServerConfig }; 

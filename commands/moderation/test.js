@@ -9,45 +9,42 @@ export default {
   async execute(message, args) {
     await sendMessage(message, {
       content: '**Direct content test**',
-      
+
       title: '📝 ReiMessageMaker Test Suite',
       description: 'This message tests all available ReiMessageMaker features',
       color: 0x2B2D31,
-      
+
       fields: [
-        { 
-          name: '📋 Regular Field', 
+        {
+          name: '📋 Regular Field',
           value: 'Standard field test'
         },
-        { 
-          name: '📊 Inline Fields', 
-          value: 'Left', 
-          inline: true 
+        {
+          name: '📊 Inline Fields',
+          value: 'Left',
+          inline: true
         },
-        { 
-          name: '\u200B', 
-          value: 'Center', 
-          inline: true 
+        {
+          name: '\u200B',
+          value: 'Center',
+          inline: true
         },
-        { 
-          name: '\u200B', 
-          value: 'Right', 
-          inline: true 
+        {
+          name: '\u200B',
+          value: 'Right',
+          inline: true
         }
       ],
 
-      // Media tests
       thumbnail: message.author.displayAvatarURL(),
       image: message.guild.bannerURL() || message.guild.iconURL(),
 
-      // Metadata tests
-      footer: { 
+      footer: {
         text: `Requested by ${message.author.tag}`,
         icon_url: message.author.displayAvatarURL()
       },
       timestamp: true,
 
-      // Component tests
       components: [
         [
           {
