@@ -1,0 +1,7 @@
+{
+    "blacklisted": [
+        "userID1",
+        "userID2",
+        "userID3"
+    ]
+}
