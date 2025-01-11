@@ -1,5 +1,5 @@
 export const botMasters = [
-    '374589381752913930', // 'more botmasters' user IDs'
+    'youruserid', // change to your own, or add more if you have multiple bot masters
 ];
 
 export function isBotMaster(userId) {
