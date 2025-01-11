@@ -1,6 +1,5 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
 import { addXP, getRank, BASE_XP, XP_VARIANCE } from '../../functions/levelSystem.js';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { join } from 'path';
