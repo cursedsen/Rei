@@ -80,7 +80,7 @@ export default [
                                 url: member.user.displayAvatarURL(),
                             },
                             footer: {
-                                text: `Event logged on ${timestamp.toUTCString()} • ${timestamp.toLocaleString()}`,
+                                text: `Rei 1.4.2 • ${timestamp.toUTCString()}`,
                             },
                         },
                     ],
