@@ -42,9 +42,9 @@ export default {
                             `**After**\n${
                                 newMessage.content || "No text content"
                             }`,
-                        color: 0xffaa00,
+                        color: 0x2B2D31,
                         footer: {
-                            text: `Event logged on ${timestamp.toUTCString()} • ${timestamp.toLocaleString()}`,
+                            text: `Rei 1.4.2 • ${timestamp.toUTCString()}`,
                         },
                     },
                 ],
