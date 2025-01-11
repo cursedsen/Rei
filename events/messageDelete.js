@@ -47,10 +47,7 @@ export default {
                             }`,
                         color: 0xff0000,
                         footer: {
-                            text: `Message ID: ${
-                                message.id
-                            } • ${timestamp.toLocaleDateString("nl-NL")}`,
-                            icon_url: message.author.displayAvatarURL(),
+                            text: `Rei 1.4.2 • ${timestamp.toUTCString()}`,
                         },
                     },
                 ],
