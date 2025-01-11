@@ -1,34 +1,97 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
+import { ButtonStyle } from 'discord.js';
 
 export default {
   name: 'test',
-  description: 'a test command to verify the bot is working',
+  description: 'Tests ReiMessageMaker functionality',
   category: 'moderation',
   permissions: ['Administrator'],
   async execute(message, args) {
     await sendMessage(message, {
-      title: 'ReiMessageMaker Test Command',
-      description: 'Test description',
-      color: 0x7289da,
+      content: '**Direct content test**',
+      
+      title: '📝 ReiMessageMaker Test Suite',
+      description: 'This message tests all available ReiMessageMaker features',
+      color: 0x2B2D31,
+      
       fields: [
-        { name: 'Title Field', value: 'Test title' },
-        { name: 'Description Field', value: 'Test description' },
-        { name: 'Color Field', value: 'Test color' },
-        { name: 'Fields Array', value: 'Test fields' },
-        { name: 'Timestamp', value: 'Test timestamp' },
-        { name: 'Author Field', value: message.author.tag },
-        { name: 'Footer Text', value: 'Test footer' },
-        { name: 'Footer Icon', value: 'Test footer icon' },
-        { name: 'Thumbnail', value: 'Test thumbnail' },
-        { name: 'Image', value: 'Test image' },
-        { name: 'URL', value: 'Test url' }
+        { 
+          name: '📋 Regular Field', 
+          value: 'Standard field test'
+        },
+        { 
+          name: '📊 Inline Fields', 
+          value: 'Left', 
+          inline: true 
+        },
+        { 
+          name: '\u200B', 
+          value: 'Center', 
+          inline: true 
+        },
+        { 
+          name: '\u200B', 
+          value: 'Right', 
+          inline: true 
+        }
       ],
-      footer: { text: 'Test footer' },
-      footerIcon: message.author.displayAvatarURL(),
-      thumbnail: message.guild.iconURL(),
-      image: 'https://sen.wtf/favicon.gif',
-      url: 'https://sen.wtf/',
-      timestamp: true
+
+      // Media tests
+      thumbnail: message.author.displayAvatarURL(),
+      image: message.guild.bannerURL() || message.guild.iconURL(),
+
+      // Metadata tests
+      footer: { 
+        text: `Requested by ${message.author.tag}`,
+        icon_url: message.author.displayAvatarURL()
+      },
+      timestamp: true,
+
+      // Component tests
+      components: [
+        [
+          {
+            type: 'button',
+            customId: 'test_button1',
+            label: 'Primary',
+            style: ButtonStyle.Primary
+          },
+          {
+            type: 'button',
+            customId: 'test_button2',
+            label: 'Success',
+            style: ButtonStyle.Success,
+            emoji: '✅'
+          },
+          {
+            type: 'button',
+            label: 'Link',
+            style: ButtonStyle.Link,
+            url: 'https://github.com'
+          }
+        ],
+        [
+          {
+            type: 'select',
+            customId: 'test_select',
+            placeholder: 'Select an option',
+            options: [
+              {
+                label: 'Option 1',
+                description: 'First option',
+                value: 'opt1',
+                emoji: '1️⃣'
+              },
+              {
+                label: 'Option 2',
+                description: 'Second option',
+                value: 'opt2',
+                emoji: '2️⃣'
+              }
+            ]
+          }
+        ]
+      ]
     });
   }
 };
