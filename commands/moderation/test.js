@@ -54,38 +54,11 @@ export default {
             style: ButtonStyle.Primary
           },
           {
-            type: 'button',
+            type: 'button', 
             customId: 'test_button2',
             label: 'Success',
             style: ButtonStyle.Success,
             emoji: '✅'
-          },
-          {
-            type: 'button',
-            label: 'Link',
-            style: ButtonStyle.Link,
-            url: 'https://github.com'
-          }
-        ],
-        [
-          {
-            type: 'select',
-            customId: 'test_select',
-            placeholder: 'Select an option',
-            options: [
-              {
-                label: 'Option 1',
-                description: 'First option',
-                value: 'opt1',
-                emoji: '1️⃣'
-              },
-              {
-                label: 'Option 2',
-                description: 'Second option',
-                value: 'opt2',
-                emoji: '2️⃣'
-              }
-            ]
           }
         ]
       ]
