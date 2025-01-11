@@ -1,6 +1,5 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
-import { sendMessage } from './reiMessageMaker.js';
 import { mkdir } from 'fs/promises';
 import { join } from 'path';
 
