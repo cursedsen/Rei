@@ -1,6 +1,5 @@
 import { sendMessage } from './reiMessageMaker.js';
-import { DiscordAPIError, GatewayIntentBits } from 'discord.js';
-import { PermissionsBitField } from 'discord.js';
+import { DiscordAPIError } from 'discord.js';
 
 export async function handleError(error, message) {
     console.error('Error occurred:', error);
