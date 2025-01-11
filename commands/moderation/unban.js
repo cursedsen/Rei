@@ -1,6 +1,5 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
 import { logModAction } from '../../functions/auditLogger.js';
-import { User } from 'discord.js';
 
 export default {
     name: 'unban',
