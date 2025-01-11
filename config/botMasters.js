@@ -4,4 +4,4 @@ export const botMasters = [
 
 export function isBotMaster(userId) {
     return botMasters.includes(userId);
-} 
+}

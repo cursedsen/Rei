@@ -1,8 +1,5 @@
 import { sendMessage } from "../../functions/reiMessageMaker.js";
-import {
-    updateServerConfig,
-    getServerConfig,
-} from "../../functions/serverConfig.js";
+import { updateServerConfig, getServerConfig } from "../../functions/serverConfig.js";
 import { isBotMaster } from "../../config/botMasters.js";
 
 export default {
