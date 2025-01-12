@@ -1,4 +1,4 @@
-import { handleStarboard } from '../functions/msgboard.js';
+import { handleStarboard } from '../functions/msgBoard.js';
 
 export default {
   name: 'messageReactionAdd',
