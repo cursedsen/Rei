@@ -40,13 +40,18 @@ export default {
 						? `<#${config.log_channel_deletions}>`
 						: "`Not set`"
 					}`,
+					`**Starboard Channel**\n${config.starboard_channel
+						? `<#${config.starboard_channel}>`
+						: "`Not set`"
+					}`,
+					`**Star Threshold**\n\`${config.starboard_threshold || "Not set"}\``,
 					`**Prefix**\n\`${config.prefix || "."}\``,
 					"",
 					"**Usage**",
 					"`-config <setting> <value>`",
 					"",
 					"**Available Settings**",
-					"`joinleave`, `modaudit`, `edits`, `deletions`, `prefix`",
+					"`joinleave`, `modaudit`, `edits`, `deletions`, `prefix`, `starboard`, `starthreshold`",
 				].join("\n"),
 				color: 0x2b2d31,
 			});
@@ -61,39 +66,47 @@ export default {
 			edits: "log_channel_edits",
 			deletions: "log_channel_deletions",
 			prefix: "prefix",
+			starboard: "starboard_channel",
+			starthreshold: "starboard_threshold",
 		};
 
 		if (!settingMap[setting]) {
 			return await sendMessage(message, {
 				title: "Error",
 				description:
-					"Invalid setting. Available settings: joinleave, modaudit, edits, deletions, prefix",
+					"Invalid setting. Available settings: joinleave, modaudit, edits, deletions, prefix, starboard, starthreshold",
 				color: 0xff0000,
 			});
 		}
 
 		try {
-			if (setting !== "prefix") {
-				const channel =
-					message.mentions.channels.first() ||
+			if (['joinleave', 'modaudit', 'edits', 'deletions', 'starboard'].includes(setting)) {
+				const channel = message.mentions.channels.first() || 
 					message.guild.channels.cache.get(value);
 
 				if (!channel) {
 					return await sendMessage(message, {
 						title: "Error",
-						description:
-							"Please mention a valid channel or provide a channel ID.",
+						description: "Please mention a valid channel or provide a channel ID.",
 						color: 0xff0000,
 					});
 				}
 
-				await updateServerConfig(
-					message.guild.id,
-					settingMap[setting],
-					channel.id
-				);
-			} else {
-				await updateServerConfig(message.guild.id, "prefix", value);
+				await updateServerConfig(message.guild.id, settingMap[setting], channel.id);
+			}
+			else if (setting === 'prefix') {
+				await updateServerConfig(message.guild.id, settingMap[setting], value);
+			}
+			else if (setting === 'starthreshold') {
+				const threshold = parseInt(value);
+				if (isNaN(threshold) || threshold < 1) {
+					return await sendMessage(message, {
+						title: "Error",
+						description: "Please provide a valid number greater than 0.",
+						color: 0xff0000,
+					});
+				}
+				await updateServerConfig(message.guild.id, settingMap[setting], threshold);
 			}
 
 			await sendMessage(message, {
@@ -105,8 +118,7 @@ export default {
 			console.error(error);
 			await sendMessage(message, {
 				title: "Error",
-				description:
-					"An error occurred while updating the configuration.",
+				description: "An error occurred while updating the configuration.",
 				color: 0xff0000,
 			});
 		}
