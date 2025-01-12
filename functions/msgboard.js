@@ -22,6 +22,7 @@ export async function handleStarboard(reaction, user) {
     }
 
     const validEmojis = ['⭐', '🌟', '✨', '🔥', '🐟'];
+
     if (!validEmojis.includes(reaction.emoji.name)) {
       return;
     }
@@ -55,12 +56,24 @@ export async function handleStarboard(reaction, user) {
       const attachment = message.attachments.first();
       if (attachment && attachment.contentType?.startsWith('image/')) {
         messageOptions.image = attachment.url;
-        messageOptions.description = [
-          message.content || '*No text content*',
-          '',
-          `[Jump to message](${message.url})`
-        ].join('\n');
       }
+
+      if (!messageOptions.image && message.embeds?.length > 0) {
+        const tenorEmbed = message.embeds.find(e => e.data.provider?.name === "Tenor");
+        if (tenorEmbed?.data.thumbnail?.url) {
+          const tenorMatch = /^https:\/\/media\.tenor\.com\/([a-zA-Z0-9_-]+)e\/[a-zA-Z0-9_-]+\.png$/;
+          const match = tenorEmbed.data.thumbnail.url.match(tenorMatch);
+          if (match) {
+            messageOptions.image = `https://c.tenor.com/${match[1]}C/tenor.gif`;
+          }
+        }
+      }
+
+      messageOptions.description = [
+        message.content || '*No text content*',
+        '',
+        `[Jump to message](${message.url})`
+      ].join('\n');
 
       try {
         if (existingStarMessage) {
