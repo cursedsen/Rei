@@ -2,7 +2,7 @@ import { getServerConfig } from "../functions/serverConfig.js";
 import { handleError } from "../functions/errorHandler.js";
 
 export default {
-  name: "messageEdit",
+  name: "messageUpdate",
   async execute(oldMessage, newMessage) {
     if (
       !oldMessage?.author ||
