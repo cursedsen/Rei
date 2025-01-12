@@ -1,6 +1,4 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
 import { readFileSync } from "fs";
 import { readdirSync } from "fs";
 import { config } from "dotenv";
@@ -11,91 +9,48 @@ import { getServerPrefix } from "./functions/serverConfig.js";
 import { logModAction } from "./functions/auditLogger.js";
 import { handleError } from "./functions/errorHandler.js";
 
-
 config();
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const commands = new Map();
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildVoiceStates,
   ],
+  partials: [
+    Partials.Message,
+    Partials.Channel,
+    Partials.Reaction,
+    Partials.User,
+    Partials.GuildMember
+  ]
 });
 
-async function loadCommands(dir) {
-  const files = readdirSync(dir, { withFileTypes: true });
+const commands = new Map();
+const commandFolders = readdirSync("./commands");
 
-  for (const file of files) {
-    const path = join(dir, file.name);
-
-    if (file.isDirectory()) {
-      await loadCommands(path);
-    } else if (file.name.endsWith(".js")) {
-      const importPath = path.replace(__dirname, ".").replace(/\\/g, "/");
-      try {
-        const command = (await import(importPath)).default;
-        if (!command || !command.name) {
-          console.warn(
-            `Warning: Command file ${file.name} does not export a valid command object`
-          );
-          continue;
-        }
-        commands.set(command.name, command);
-        if (command.aliases) {
-          command.aliases.forEach(alias => {
-            commands.set(alias, command);
-          });
-        }
-      } catch (error) {
-        console.error(
-          `Error loading command from ${file.name}:`,
-          error
-        );
-      }
-    }
+for (const folder of commandFolders) {
+  const commandFiles = readdirSync(`./commands/${folder}`).filter(file => file.endsWith(".js"));
+  for (const file of commandFiles) {
+    const command = await import(`./commands/${folder}/${file}`);
+    commands.set(command.default.name, command.default);
   }
 }
 
-async function loadEvents(dir) {
-  const files = readdirSync(dir, { withFileTypes: true });
+const eventFiles = readdirSync("./events").filter(file => file.endsWith(".js"));
 
-  for (const file of files) {
-    const path = join(dir, file.name);
-
-    if (file.isDirectory()) {
-      await loadEvents(path);
-    } else if (file.name.endsWith(".js")) {
-      const importPath = path.replace(__dirname, ".").replace(/\\/g, "/");
-      const event = (await import(importPath)).default;
-
-      if (Array.isArray(event)) {
-        event.forEach((e) => {
-          if (e.once) {
-            client.once(e.name, (...args) => e.execute(...args));
-          } else {
-            client.on(e.name, (...args) => e.execute(...args));
-          }
-        });
-      } else {
-        if (event.once) {
-          client.once(event.name, (...args) =>
-            event.execute(...args)
-          );
-        } else {
-          client.on(event.name, (...args) => event.execute(...args));
-        }
-      }
-    }
+for (const file of eventFiles) {
+  const event = await import(`./events/${file}`);
+  if (event.default.once) {
+    client.once(event.default.name, (...args) => event.default.execute(...args));
+  } else {
+    client.on(event.default.name, (...args) => event.default.execute(...args));
   }
 }
-
-(async () => {
-  await loadCommands(join(__dirname, "commands"));
-  await loadEvents(join(__dirname, "events"));
-})();
 
 client.on("ready", async () => {
   console.log("ready");
