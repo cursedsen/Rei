@@ -13,6 +13,20 @@ async function initializeDatabase() {
 		});
 	}
 
+	await db.exec(`
+		CREATE TABLE IF NOT EXISTS server_config (
+			guild_id TEXT PRIMARY KEY,
+			log_channel_join_leave TEXT,
+			log_channel_mod_audit TEXT,
+			log_channel_edits TEXT,
+			log_channel_deletions TEXT,
+			mute_role TEXT,
+			prefix TEXT,
+			starboard_channel TEXT,
+			starboard_threshold INTEGER DEFAULT 5
+		)
+	`);
+
 	const tableInfo = await db.all("PRAGMA table_info(server_config)");
 	const columns = tableInfo.map(col => col.name);
 
