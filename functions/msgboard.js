@@ -21,7 +21,7 @@ export async function handleStarboard(reaction, user) {
       return;
     }
 
-    const validEmojis = ['⭐', '🌟', '✨', '🔥'];
+    const validEmojis = ['⭐', '🌟', '✨', '🔥', '🐟'];
     if (!validEmojis.includes(reaction.emoji.name)) {
       return;
     }
