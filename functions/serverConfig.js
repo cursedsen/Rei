@@ -6,29 +6,23 @@ import { join } from 'path';
 let db;
 
 async function initializeDatabase() {
-	const serverDataPath = './serverData';
-	try {
-		await mkdir(serverDataPath, { recursive: true });
-	} catch (error) {
-		if (error.code !== 'EEXIST') throw error;
+	if (!db) {
+		db = await open({
+			filename: './serverData/serverconfig.db',
+			driver: sqlite3.Database
+		});
 	}
 
-	db = await open({
-		filename: join(serverDataPath, 'serverConfig.db'),
-		driver: sqlite3.Database
-	});
+	const tableInfo = await db.all("PRAGMA table_info(server_config)");
+	const columns = tableInfo.map(col => col.name);
 
-	await db.exec(`
-        CREATE TABLE IF NOT EXISTS server_config (
-            guild_id TEXT PRIMARY KEY,
-            log_channel_join_leave TEXT,
-            log_channel_mod_audit TEXT,
-            log_channel_edits TEXT,
-            log_channel_deletions TEXT,
-            mute_role TEXT,
-            prefix TEXT DEFAULT '-'
-        )
-    `);
+	if (!columns.includes('starboard_channel')) {
+		await db.exec('ALTER TABLE server_config ADD COLUMN starboard_channel TEXT');
+	}
+
+	if (!columns.includes('starboard_threshold')) {
+		await db.exec('ALTER TABLE server_config ADD COLUMN starboard_threshold INTEGER DEFAULT 5');
+	}
 }
 
 async function getServerConfig(guildId) {
@@ -58,7 +52,9 @@ async function updateServerConfig(guildId, setting, value) {
 		'log_channel_edits',
 		'log_channel_deletions',
 		'mute_role',
-		'prefix'
+		'prefix',
+		'starboard_channel',
+		'starboard_threshold'
 	];
 
 	if (!validSettings.includes(setting)) {
@@ -78,4 +74,4 @@ export const getServerPrefix = async (guildId) => {
 	return config.prefix || '-';
 }
 
-export { getServerConfig, updateServerConfig }; 
+export { getServerConfig, updateServerConfig, initializeDatabase };
