@@ -21,7 +21,12 @@ export async function sendMessage(target, options) {
       if (options.color) embed.setColor(options.color);
       if (options.fields) embed.addFields(options.fields);
       if (options.thumbnail) embed.setThumbnail(options.thumbnail);
-      if (options.image) embed.setImage(options.image);
+      if (options.image && typeof options.image === 'string') {
+        embed.setImage(options.image);
+      } else if (options.image?.url) {
+        embed.setImage(options.image.url);
+      }
+      if (options.author) embed.setAuthor(options.author);
       if (options.footer) embed.setFooter(options.footer);
       if (options.timestamp) embed.setTimestamp();
 
