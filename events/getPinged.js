@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import { sendMessage } from "../functions/reiMessageMaker.js";
+import { AttachmentBuilder } from "discord.js";
 
 export default {
   name: "messageCreate",
@@ -9,12 +10,23 @@ export default {
     if (message.reference || message.type === 'REPLY') return;
     if (!message.mentions.has(message.client.user.id)) return;
 
-    const strings = JSON.parse(
-      readFileSync("./things/strings.json", "utf8")
-    );
+    if (Math.random() < 0.01) {
+      try {
+        const errrrGif = new AttachmentBuilder('./assets/gifs/errrr.gif');
+        await message.channel.send({ files: [errrrGif] });
+      } catch (error) {
+        console.error('Error sending errrr.gif:', error);
+        const strings = JSON.parse(readFileSync("./things/strings.json", "utf8"));
+        const responses = strings.ping_responses;
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        await sendMessage(message, { content: randomResponse });
+      }
+      return;
+    }
+
+    const strings = JSON.parse(readFileSync("./things/strings.json", "utf8"));
     const responses = strings.ping_responses;
-    const randomResponse =
-      responses[Math.floor(Math.random() * responses.length)];
+    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
 
     await sendMessage(message, {
       content: randomResponse,
