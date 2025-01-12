@@ -2,9 +2,10 @@ import { getServerConfig } from "../functions/serverConfig.js";
 import { handleError } from "../functions/errorHandler.js";
 
 export default {
-  name: "messageUpdate",
+  name: "messageEdit",
   async execute(oldMessage, newMessage) {
     if (
+      !oldMessage?.author ||
       oldMessage.author?.bot ||
       !oldMessage.guild ||
       oldMessage.content === newMessage.content
