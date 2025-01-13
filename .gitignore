@@ -3,3 +3,4 @@
 *.db
 pnpm-lock.yaml
 package-lock.json
+config/botMasters.js
