@@ -100,23 +100,14 @@ client.on("messageCreate", async (message) => {
   if (!command) return;
 
   try {
-    if (command.argsRequired !== false && args.length === 0) {
-      return message.reply("Please provide arguments for this command.");
-    }
-
     if (await checkPermissions(message, command)) {
       await command.execute(message, args, commands);
-
-      if (command.category === "moderation") {
-        const targetUser = message.mentions.users.first();
-        const reason = args.slice(1).join(" ");
-        await logModAction(message, commandName, targetUser, reason);
-      }
     }
   } catch (error) {
     await handleError(error, message);
   }
 });
+
 
 client.on("error", (error) => {
   console.error("Discord client error:", error);
