@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { getRandomResponse } from "../utils/randomResponse.js";
 import { sendMessage } from "../functions/reiMessageMaker.js";
 import { AttachmentBuilder } from "discord.js";
 
@@ -16,20 +16,13 @@ export default {
         await message.channel.send({ files: [errrrGif] });
       } catch (error) {
         console.error('Error sending errrr.gif:', error);
-        const strings = JSON.parse(readFileSync("./things/strings.json", "utf8"));
-        const responses = strings.ping_responses;
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        const randomResponse = getRandomResponse();
         await sendMessage(message, { content: randomResponse });
       }
       return;
     }
 
-    const strings = JSON.parse(readFileSync("./things/strings.json", "utf8"));
-    const responses = strings.ping_responses;
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-
-    await sendMessage(message, {
-      content: randomResponse,
-    });
+    const randomResponse = getRandomResponse();
+    await sendMessage(message, { content: randomResponse });
   },
 };
