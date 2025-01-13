@@ -10,7 +10,7 @@ export default {
     if (message.reference || message.type === 'REPLY') return;
     if (!message.mentions.has(message.client.user.id)) return;
 
-    if (Math.random() < 0.01) {
+    if (Math.random() < 0.1) {
       try {
         const errrrGif = new AttachmentBuilder('./assets/gifs/errrr.gif');
         await message.channel.send({ files: [errrrGif] });
