@@ -40,6 +40,12 @@ for (const folder of commandFolders) {
       await import(new URL(`./commands/${folder}/${file}`, import.meta.url))
     ).default;
     commands.set(command.name, command);
+    
+    if (command.aliases) {
+      command.aliases.forEach(alias => {
+        commands.set(alias, command);
+      });
+    }
   }
 }
 
