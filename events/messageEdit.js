@@ -4,23 +4,29 @@ import { handleError } from "../functions/errorHandler.js";
 export default {
   name: "messageUpdate",
   async execute(oldMessage, newMessage) {
-    if (
-      !oldMessage?.author ||
-      oldMessage.author?.bot ||
-      !oldMessage.guild ||
-      oldMessage.content === newMessage.content
-    )
-      return;
-
-    const timestamp = new Date();
-    const serverConfig = await getServerConfig(oldMessage.guild.id);
-    const logChannel = oldMessage.guild.channels.cache.get(
-      serverConfig.log_channel_edits
-    );
-
-    if (!logChannel) return;
-
     try {
+      if (oldMessage.partial) await oldMessage.fetch();
+      if (newMessage.partial) await newMessage.fetch();
+
+      if (
+        !oldMessage?.author ||
+        oldMessage.author?.bot ||
+        !oldMessage.guild ||
+        oldMessage.content === newMessage.content
+      )
+        return;
+
+      const timestamp = new Date();
+      const serverConfig = await getServerConfig(oldMessage.guild.id);
+      const logChannel = oldMessage.guild.channels.cache.get(
+        serverConfig.log_channel_edits
+      );
+
+      if (!logChannel) {
+        console.warn(`Log channel not found for guild: ${oldMessage.guild.id}`);
+        return;
+      }
+
       await logChannel.send({
         embeds: [
           {
@@ -36,10 +42,8 @@ export default {
                 : " | "
               }` +
               `[Jump to Message](${oldMessage.url})\n\n` +
-              `**Before**\n${oldMessage.content || "No text content"
-              }\n\n` +
-              `**After**\n${newMessage.content || "No text content"
-              }`,
+              `**Before**\n${oldMessage.content || "No text content"}\n\n` +
+              `**After**\n${newMessage.content || "No text content"}`,
             color: 0x2B2D31,
             footer: {
               text: `Rei 1.4.2 • ${timestamp.toUTCString()}`,
@@ -48,6 +52,7 @@ export default {
         ],
       });
     } catch (error) {
+      console.error("Error in messageUpdate handler:", error);
       await handleError(error, oldMessage);
     }
   },
