@@ -100,11 +100,11 @@ client.on("messageCreate", async (message) => {
   if (!command) return;
 
   try {
-    if (await checkPermissions(message, command)) {
-      if (!args.length) {
-        return message.reply("Please provide arguments for this command.");
-      }
+    if (command.argsRequired !== false && args.length === 0) {
+      return message.reply("Please provide arguments for this command.");
+    }
 
+    if (await checkPermissions(message, command)) {
       await command.execute(message, args, commands);
 
       if (command.category === "moderation") {
