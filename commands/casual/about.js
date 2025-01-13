@@ -1,11 +1,5 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const packageJson = JSON.parse(readFileSync(join(__dirname, '../../package.json')));
+import { getVersion } from '../../functions/version.js';
 
 export default {
   name: 'about',
@@ -28,7 +22,7 @@ export default {
         '• [GitHub repository](https://github.com/cursedsen/Rei)',
         '• [Documentation](https://sen.wtf/rei) (WIP)',
         '',
-        `**Version:** ${packageJson.version}`,
+        `**Version:** ${getVersion()}`,
         `**Prefix:** ${message.prefix || '-'}`,
         '',
         '*This bot is a passion project and exam material.*',

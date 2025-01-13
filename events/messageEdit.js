@@ -1,12 +1,6 @@
 import { getServerConfig } from "../functions/serverConfig.js";
 import { handleError } from "../functions/errorHandler.js";
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const packageJson = JSON.parse(readFileSync(join(__dirname, '../../package.json')));
+import { getVersion } from "../functions/version.js";
 
 export default {
   name: "messageUpdate",
@@ -53,7 +47,7 @@ export default {
               `**After**\n${newMessage.content || "No text content"}`,
             color: 0x2B2D31,
             footer: {
-              text: `Rei ${packageJson.version} • ${timestamp.toUTCString()}`,
+              text: `Rei ${getVersion()} • ${timestamp.toUTCString()}`,
             },
           },
         ],
