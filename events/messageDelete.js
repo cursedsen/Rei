@@ -1,5 +1,12 @@
 import { getServerConfig } from "../functions/serverConfig.js";
 import { PermissionsBitField } from "discord.js";
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../../package.json')));
 
 export default {
    name: "messageDelete",
@@ -45,7 +52,7 @@ export default {
                      }`,
                   color: 0xff0000,
                   footer: {
-                     text: `Rei 1.4.2 • ${timestamp.toUTCString()}`,
+                    text: `Rei ${packageJson.version} • ${timestamp.toUTCString()}`,
                   },
                },
             ],
