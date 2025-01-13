@@ -1,8 +1,6 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js";
-import { readFileSync } from "fs";
-import { readdirSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import { config } from "dotenv";
-
 
 import { checkPermissions } from "./functions/permissionHandler.js";
 import { getServerPrefix } from "./functions/serverConfig.js";
@@ -26,38 +24,53 @@ const client = new Client({
     Partials.Channel,
     Partials.Reaction,
     Partials.User,
-    Partials.GuildMember
-  ]
+    Partials.GuildMember,
+  ],
 });
 
 const commands = new Map();
 const commandFolders = readdirSync("./commands");
 
 for (const folder of commandFolders) {
-  const commandFiles = readdirSync(`./commands/${folder}`).filter(file => file.endsWith(".js"));
+  const commandFiles = readdirSync(`./commands/${folder}`).filter((file) =>
+    file.endsWith(".js")
+  );
   for (const file of commandFiles) {
-    const command = await import(`./commands/${folder}/${file}`);
-    commands.set(command.default.name, command.default);
+    const command = (
+      await import(new URL(`./commands/${folder}/${file}`, import.meta.url))
+    ).default;
+    commands.set(command.name, command);
   }
 }
 
-const eventFiles = readdirSync("./events").filter(file => file.endsWith(".js"));
+const eventFiles = readdirSync("./events").filter((file) =>
+  file.endsWith(".js")
+);
 
 for (const file of eventFiles) {
-  const event = await import(`./events/${file}`);
-  if (event.default.once) {
-    client.once(event.default.name, (...args) => event.default.execute(...args));
-  } else {
-    client.on(event.default.name, (...args) => event.default.execute(...args));
-  }
+  const event = (
+    await import(new URL(`./events/${file}`, import.meta.url))
+  ).default;
+  client.on(event.name, async (...args) => {
+    try {
+      await event.execute(...args);
+    } catch (error) {
+      console.error(`Error in event ${event.name}:`, error);
+    }
+  });
 }
 
 client.on("ready", async () => {
-  console.log("ready");
   console.log(`Logged in as ${client.user.username}`);
 
-  const startupEvent = (await import("./events/startup.js")).default;
-  await startupEvent.execute(client);
+  try {
+    const startupEvent = (
+      await import(new URL("./events/startup.js", import.meta.url))
+    ).default;
+    await startupEvent.execute(client);
+  } catch (error) {
+    console.error("Error during startup event:", error);
+  }
 
   const strings = JSON.parse(readFileSync("./things/strings.json", "utf8"));
   const statusMessages = strings.status;
@@ -88,6 +101,10 @@ client.on("messageCreate", async (message) => {
 
   try {
     if (await checkPermissions(message, command)) {
+      if (!args.length) {
+        return message.reply("Please provide arguments for this command.");
+      }
+
       await command.execute(message, args, commands);
 
       if (command.category === "moderation") {
