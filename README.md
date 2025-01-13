@@ -17,7 +17,6 @@
    git clone https://github.com/cursedsen/Rei.git
    cd Rei
 
-
 2. **Install Dependencies**:
 
    Ensure you have [Node.js](https://nodejs.org/) installed, then run:
