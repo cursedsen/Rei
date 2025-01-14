@@ -27,7 +27,7 @@ export default {
         '',
         '*This bot is a passion project and exam material.*',
         '*Contributions are super welcome!*',
-        '*Some things may be broken. Please report any issues to the [my developer](https://github.com/cursedsen)*',
+        '*Some things may be broken. Please report any issues to [my developer](https://github.com/cursedsen)*',
       ].join('\n'),
       color: 0x2B2D31,
       thumbnail: message.client.user.displayAvatarURL()
