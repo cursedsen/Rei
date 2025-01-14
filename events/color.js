@@ -5,13 +5,13 @@ export default {
   async execute(message) {
     if (message.author.bot) return;
 
-    const hexRegex = /#?([A-Fa-f0-9]{6})/g;
+    const hexRegex = /(?:#|0x)([A-Fa-f0-9]{6})\b/gi;
     const matches = message.content.match(hexRegex);
 
     if (!matches) return;
 
     for (const match of matches) {
-      const hexCode = match.startsWith('#') ? match : `#${match}`;
+      const hexCode = match.startsWith('0x') ? '#' + match.substring(2) : match;
       const hexColor = parseInt(hexCode.substring(1), 16);
       const colorPreview = `https://singlecolorimage.com/get/${hexCode.substring(1)}/100x100`;
 
