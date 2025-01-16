@@ -1,7 +1,7 @@
 import { sendMessage } from "../functions/reiMessageMaker.js";
 
 export default {
-  name: "messageCreate",
+  name: "ThisIsNoLongerActive", //change this to "messageCreate" to activate the event
   async execute(message) {
     if (message.author.bot) return;
 
