@@ -20,7 +20,7 @@ export default {
         '',
         '**Links**',
         '• [GitHub repository](https://github.com/cursedsen/Rei)',
-        '• [Documentation](https://sen.wtf/rei) (WIP)',
+        '• [Documentation](https://sen.wtf/docs/rei) (WIP)',
         '',
         `**Version:** ${getVersion()}`,
         `**Prefix:** ${message.prefix || '-'}`,
