@@ -2,6 +2,7 @@ import { sendMessage } from './reiMessageMaker.js';
 import { getServerConfig } from './serverConfig.js';
 
 export const starboardCache = new Map();
+const starboardEmojiCache = new Map();
 
 export async function handleStarboard(reaction, user) {
   try {
@@ -27,10 +28,22 @@ export async function handleStarboard(reaction, user) {
       return;
     }
 
-    const starCount = validEmojis.reduce((count, emoji) => {
-      const reactions = message.reactions.cache.get(emoji);
-      return count + (reactions ? reactions.count : 0);
-    }, 0);
+    let activeEmoji = starboardEmojiCache.get(message.id);
+
+    if (!activeEmoji) {
+      activeEmoji = validEmojis.find(emoji => {
+        const reactions = message.reactions.cache.get(emoji);
+        return reactions && reactions.count > 0;
+      });
+      
+      if (activeEmoji) {
+        starboardEmojiCache.set(message.id, activeEmoji);
+      } else {
+        return;
+      }
+    }
+
+    const starCount = message.reactions.cache.get(activeEmoji)?.count || 0;
 
     const existingStarMessage = starboardCache.get(message.id);
 
@@ -44,6 +57,7 @@ export async function handleStarboard(reaction, user) {
         if (starMessage) {
           await starMessage.delete();
           starboardCache.delete(message.id);
+          starboardEmojiCache.delete(message.id);
         }
       } catch (err) {
         console.error('Failed to delete starboard message:', err);
@@ -52,7 +66,7 @@ export async function handleStarboard(reaction, user) {
     }
 
     const messageOptions = {
-      content: `${reaction.emoji.name} ${starCount} ${message.channel}`,
+      content: `${activeEmoji} ${starCount} ${message.channel}`,
       description: [
         message.content || '*No text content*',
         '',
