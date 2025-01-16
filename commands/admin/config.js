@@ -20,7 +20,7 @@ export default {
 		if (!args[0]) {
 			const config = await getServerConfig(message.guild.id);
 			return await sendMessage(message, {
-				title: "⚙️ Server Configuration",
+				title: "Server configuration",
 				description: [
 					"**Current Settings**",
 					"",
@@ -45,13 +45,17 @@ export default {
 						: "`Not set`"
 					}`,
 					`**Star Threshold**\n\`${config.starboard_threshold || "Not set"}\``,
+					`**Profiles**\n${config.log_channel_profiles
+						? `<#${config.log_channel_profiles}>`
+						: "`Not set`"
+					}`,
 					`**Prefix**\n\`${config.prefix || "."}\``,
 					"",
 					"**Usage**",
 					"`-config <setting> <value>`",
 					"",
 					"**Available Settings**",
-					"`joinleave`, `modaudit`, `edits`, `deletions`, `prefix`, `starboard`, `starthreshold`",
+					"`joinleave`, `modaudit`, `edits`, `deletions`, `profiles`, `prefix`, `starboard`, `starthreshold`",
 				].join("\n"),
 				color: 0x2b2d31,
 			});
@@ -65,6 +69,7 @@ export default {
 			modaudit: "log_channel_mod_audit",
 			edits: "log_channel_edits",
 			deletions: "log_channel_deletions",
+			profiles: "log_channel_profiles",
 			prefix: "prefix",
 			starboard: "starboard_channel",
 			starthreshold: "starboard_threshold",
@@ -74,14 +79,14 @@ export default {
 			return await sendMessage(message, {
 				title: "Error",
 				description:
-					"Invalid setting. Available settings: joinleave, modaudit, edits, deletions, prefix, starboard, starthreshold",
+					"Invalid setting. Available settings: joinleave, modaudit, edits, deletions, profiles, prefix, starboard, starthreshold",
 				color: 0xff0000,
 			});
 		}
 
 		try {
-			if (['joinleave', 'modaudit', 'edits', 'deletions', 'starboard'].includes(setting)) {
-				const channel = message.mentions.channels.first() || 
+			if (['joinleave', 'modaudit', 'edits', 'deletions', 'profiles', 'starboard'].includes(setting)) {
+				const channel = message.mentions.channels.first() ||
 					message.guild.channels.cache.get(value);
 
 				if (!channel) {

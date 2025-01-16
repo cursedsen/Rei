@@ -20,6 +20,7 @@ async function initializeDatabase() {
 			log_channel_mod_audit TEXT,
 			log_channel_edits TEXT,
 			log_channel_deletions TEXT,
+			log_channel_profiles TEXT,
 			mute_role TEXT,
 			prefix TEXT,
 			starboard_channel TEXT,
@@ -36,6 +37,10 @@ async function initializeDatabase() {
 
 	if (!columns.includes('starboard_threshold')) {
 		await db.exec('ALTER TABLE server_config ADD COLUMN starboard_threshold INTEGER DEFAULT 5');
+	}
+
+	if (!columns.includes('log_channel_profiles')) {
+		await db.exec('ALTER TABLE server_config ADD COLUMN log_channel_profiles TEXT');
 	}
 }
 
@@ -65,6 +70,7 @@ async function updateServerConfig(guildId, setting, value) {
 		'log_channel_mod_audit',
 		'log_channel_edits',
 		'log_channel_deletions',
+		'log_channel_profiles',
 		'mute_role',
 		'prefix',
 		'starboard_channel',
