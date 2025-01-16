@@ -82,12 +82,12 @@ export default {
           }]
         });
       } catch (dmError) {
-        console.log(`Could not send a DM to ${target.user.tag}`);
+        console.log(`Could not send a DM to <@${target.id}>`);
       }
 
       await sendMessage(message, {
         title: 'Done👍',
-        description: `${target.user.tag} was warned for: ${reason}`,
+        description: `<@${target.id}> was warned for: ${reason}`,
         color: 0x00FF00,
         timestamp: true
       });

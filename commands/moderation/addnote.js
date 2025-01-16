@@ -52,7 +52,7 @@ export default {
     await logModAction(message, 'note', target.user, note);
 
     await sendMessage(message, {
-      content: `Ok, added note to ${target.user.tag}'s record.`
+      content: `Ok, added note to <@${target.id}>'s record.`
     });
   }
 }; 

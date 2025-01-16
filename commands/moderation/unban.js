@@ -37,7 +37,7 @@ export default {
       await message.guild.bans.remove(target, reason);
 
       await sendMessage(message, {
-        content: `${target.tag} was unbanned.`
+        content: `<@${target.id}> was unbanned.`
       });
 
       await logModAction(message, 'unban', target, reason);

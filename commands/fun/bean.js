@@ -11,9 +11,7 @@ export default {
   execute: async (message, args) => {
     if (!args[0]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a valid user tag or ID to ban.',
-        color: 0xFF0000,
+        content: 'Please provide a valid user tag or ID to ban.'
       });
     }
 
@@ -25,9 +23,7 @@ export default {
 
     if (!target) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Could not find that user.',
-        color: 0xFF0000,
+        content: 'Could not find that user.'
       });
     }
 
@@ -41,7 +37,7 @@ export default {
     const funnyRandomAction = strings.user_was_x[Math.floor(Math.random() * strings.user_was_x.length)];
 
     await sendMessage(message, {
-      content: `${target.user.tag} was ${funnyRandomAction}`,
+      content: `<@${target.id}> was ${funnyRandomAction}`,
     });
   }
 };

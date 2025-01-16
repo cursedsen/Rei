@@ -80,11 +80,11 @@ export default {
           }]
         });
       } catch (dmError) {
-        console.log(`Could not send a DM to ${target.user.tag}`);
+        console.log(`Could not send a DM to <@${target.id}>`);
       }
 
       await sendMessage(message, {
-        content: `Ok, ${target.user.tag} was ${isPermanent ? 'permanently' : 'temporarily'} muted for: ${reason}`
+        content: `Ok, <@${target.id}> was ${isPermanent ? 'permanently' : 'temporarily'} muted for: ${reason}`
       });
     } catch (error) {
       console.error(error);

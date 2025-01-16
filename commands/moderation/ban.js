@@ -117,7 +117,7 @@ export default {
       const funnyRandomAction = strings.user_was_x[Math.floor(Math.random() * strings.user_was_x.length)];
 
       await sendMessage(message, {
-        content: `${target.user.tag} was ${funnyRandomAction}`,
+        content: `<@${target.id}> was ${funnyRandomAction}`,
       });
 
       await logModAction(message, 'ban', target.user, reason);
