@@ -23,12 +23,7 @@ export default {
       await message.channel.setTopic(newDescription);
 
       await sendMessage(message, {
-        title: 'Done👍',
-        description: [
-          '**New channel description:**',
-          newDescription
-        ].join('\n'),
-        color: 0x57F287
+        content: `Channel description changed to ***${newDescription}***`,
       });
 
     } catch (error) {
