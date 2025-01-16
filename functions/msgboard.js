@@ -85,8 +85,10 @@ export async function handleStarboard(reaction, user) {
       }
     }
 
+    const sanitizedContent = message.content?.replace(/@(everyone|here|&\d+)/g, '@\u200b$1') || '*No text content*';
+
     messageOptions.description = [
-      message.content || '*No text content*',
+      sanitizedContent,
       '',
       `[Jump to message](${message.url})`
     ].join('\n');
