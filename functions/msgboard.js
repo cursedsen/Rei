@@ -34,65 +34,78 @@ export async function handleStarboard(reaction, user) {
 
     const existingStarMessage = starboardCache.get(message.id);
 
-    if (starCount >= config.starboard_threshold) {
-      const messageOptions = {
-        content: `${reaction.emoji.name} ${starCount} ${message.channel}`,
-        description: [
-          message.content || '*No text content*',
-          '',
-          `[Jump to message](${message.url})`
-        ].join('\n'),
-        color: 0xFFAC33,
-        author: {
-          name: message.author.tag,
-          iconURL: message.author.displayAvatarURL()
-        },
-        footer: {
-          text: message.id
-        },
-        timestamp: message.createdAt
-      };
+    if (starCount < config.starboard_threshold && !existingStarMessage) {
+      return;
+    }
 
-      const attachment = message.attachments.first();
-      if (attachment && attachment.contentType?.startsWith('image/')) {
-        messageOptions.image = attachment.url;
-      }
-
-      if (!messageOptions.image && message.embeds?.length > 0) {
-        const tenorEmbed = message.embeds.find(e => e.data.provider?.name === "Tenor");
-        if (tenorEmbed?.data.thumbnail?.url) {
-          const tenorMatch = /^https:\/\/media\.tenor\.com\/([a-zA-Z0-9_-]+)e\/[a-zA-Z0-9_-]+\.png$/;
-          const match = tenorEmbed.data.thumbnail.url.match(tenorMatch);
-          if (match) {
-            messageOptions.image = `https://c.tenor.com/${match[1]}C/tenor.gif`;
-          }
-        }
-      }
-
-      const sanitizedContent = message.content?.replace(/@(everyone|here|&\d+)/g, '@\u200b$1') || '*No text content*';
-
-      messageOptions.description = [
-        sanitizedContent,
-        '',
-        `[Jump to message](${message.url})`
-      ].join('\n');
-
+    if (starCount < config.starboard_threshold && existingStarMessage) {
       try {
-        if (existingStarMessage) {
-          const starMessage = await starboardChannel.messages.fetch(existingStarMessage);
-          if (starMessage) {
-            await sendMessage(starMessage, messageOptions);
-          }
-        } else {
-          const starMessage = await sendMessage(starboardChannel, messageOptions);
-          if (starMessage) {
-            starboardCache.set(message.id, starMessage.id);
-          }
+        const starMessage = await starboardChannel.messages.fetch(existingStarMessage);
+        if (starMessage) {
+          await starMessage.delete();
+          starboardCache.delete(message.id);
         }
       } catch (err) {
-        console.error('Failed to handle starboard message:', err);
-        starboardCache.delete(message.id);
+        console.error('Failed to delete starboard message:', err);
       }
+      return;
+    }
+
+    const messageOptions = {
+      content: `${reaction.emoji.name} ${starCount} ${message.channel}`,
+      description: [
+        message.content || '*No text content*',
+        '',
+        `[Jump to message](${message.url})`
+      ].join('\n'),
+      color: 0xFFAC33,
+      author: {
+        name: message.author.tag,
+        iconURL: message.author.displayAvatarURL()
+      },
+      footer: {
+        text: message.id
+      },
+      timestamp: message.createdAt
+    };
+
+    const attachment = message.attachments.first();
+    if (attachment && attachment.contentType?.startsWith('image/')) {
+      messageOptions.image = attachment.url;
+    }
+
+    if (!messageOptions.image && message.embeds?.length > 0) {
+      const tenorEmbed = message.embeds.find(e => e.data.provider?.name === "Tenor");
+      if (tenorEmbed?.data.thumbnail?.url) {
+        const tenorMatch = /^https:\/\/media\.tenor\.com\/([a-zA-Z0-9_-]+)e\/[a-zA-Z0-9_-]+\.png$/;
+        const match = tenorEmbed.data.thumbnail.url.match(tenorMatch);
+        if (match) {
+          messageOptions.image = `https://c.tenor.com/${match[1]}C/tenor.gif`;
+        }
+      }
+    }
+
+    messageOptions.description = [
+      message.content || '*No text content*',
+      '',
+      `[Jump to message](${message.url})`
+    ].join('\n');
+
+    try {
+      if (existingStarMessage) {
+        const starMessage = await starboardChannel.messages.fetch(existingStarMessage);
+        if (starMessage) {
+          await sendMessage(starMessage, messageOptions);
+        }
+      } else {
+        const starMessage = await sendMessage(starboardChannel, messageOptions);
+        if (starMessage) {
+          starboardCache.set(message.id, starMessage.id);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to handle starboard message:', err);
+      starboardCache.delete(message.id);
     }
   } catch (error) {
     console.error('Starboard error:', error);
