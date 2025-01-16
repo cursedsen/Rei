@@ -125,7 +125,7 @@ export default {
             color: 0xFFD700,
             timestamp: new Date(),
             thumbnail: { url: targetModerator.user.displayAvatarURL() },
-            footer: { text: `Use ${message.prefix || '!'}audit @user [page]` }
+            footer: { text: `Use %audit @user [page]` }
           }],
           components: [row]
         };

@@ -49,13 +49,12 @@ export default {
 						? `<#${config.log_channel_profiles}>`
 						: "`Not set`"
 					}`,
-					`**Prefix**\n\`${config.prefix || "."}\``,
 					"",
 					"**Usage**",
 					"`-config <setting> <value>`",
 					"",
 					"**Available Settings**",
-					"`joinleave`, `modaudit`, `edits`, `deletions`, `profiles`, `prefix`, `starboard`, `starthreshold`",
+					"`joinleave`, `modaudit`, `edits`, `deletions`, `profiles`, `starboard`, `starthreshold`",
 				].join("\n"),
 				color: 0x2b2d31,
 			});
@@ -70,7 +69,6 @@ export default {
 			edits: "log_channel_edits",
 			deletions: "log_channel_deletions",
 			profiles: "log_channel_profiles",
-			prefix: "prefix",
 			starboard: "starboard_channel",
 			starthreshold: "starboard_threshold",
 		};
@@ -79,7 +77,7 @@ export default {
 			return await sendMessage(message, {
 				title: "Error",
 				description:
-					"Invalid setting. Available settings: joinleave, modaudit, edits, deletions, profiles, prefix, starboard, starthreshold",
+					"Invalid setting. Available settings: joinleave, modaudit, edits, deletions, profiles, starboard, starthreshold",
 				color: 0xff0000,
 			});
 		}
@@ -107,9 +105,6 @@ export default {
 				}
 
 				await updateServerConfig(message.guild.id, settingMap[setting], channel.id);
-			}
-			else if (setting === 'prefix') {
-				await updateServerConfig(message.guild.id, settingMap[setting], value);
 			}
 			else if (setting === 'starthreshold') {
 				const threshold = parseInt(value);

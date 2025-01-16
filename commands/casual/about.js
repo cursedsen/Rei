@@ -23,7 +23,7 @@ export default {
         '• [Documentation](https://sen.wtf/docs/rei) (WIP)',
         '',
         `**Version:** ${getVersion()}`,
-        `**Prefix:** ${message.prefix || '-'}`,
+        `**Prefix:** %`,
         '',
         '*This bot is a passion project and exam material.*',
         '*Contributions are super welcome!*',

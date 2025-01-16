@@ -22,7 +22,6 @@ async function initializeDatabase() {
 			log_channel_deletions TEXT,
 			log_channel_profiles TEXT,
 			mute_role TEXT,
-			prefix TEXT,
 			starboard_channel TEXT,
 			starboard_threshold INTEGER DEFAULT 5
 		)
@@ -57,8 +56,6 @@ async function getServerConfig(guildId) {
 		config = await db.get('SELECT * FROM server_config WHERE guild_id = ?', guildId);
 	}
 
-	config.defaultPrefixes = ['!', '?', '-'];
-
 	return config;
 }
 
@@ -67,12 +64,11 @@ async function updateServerConfig(guildId, setting, value) {
 
 	const validSettings = [
 		'log_channel_join_leave',
-		'log_channel_mod_audit',
+		'log_channel_mod_audit', 
 		'log_channel_edits',
 		'log_channel_deletions',
 		'log_channel_profiles',
 		'mute_role',
-		'prefix',
 		'starboard_channel',
 		'starboard_threshold'
 	];
@@ -87,11 +83,6 @@ async function updateServerConfig(guildId, setting, value) {
 	);
 }
 
-export const getServerPrefix = async (guildId) => {
-	if (!db) await initializeDatabase();
-
-	const config = await getServerConfig(guildId);
-	return config.prefix || '-';
-}
+export const getServerPrefix = async () => '%';
 
 export { getServerConfig, updateServerConfig, initializeDatabase };
