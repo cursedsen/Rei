@@ -16,10 +16,7 @@ export default {
       });
 
       await sendMessage(message, {
-        title: '🔓 Channel Unlocked',
-        description: `This channel has been unlocked.\nReason: ${reason}`,
-        color: 0x00FF00,
-        timestamp: true
+        content: `Ok, channel unlocked`
       });
 
       await logModAction(message, 'unlock', null, `Channel: ${message.channel.name} | ${reason}`);

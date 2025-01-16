@@ -18,9 +18,7 @@ export default {
 
     if (!args[1]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a note to add.',
-        color: 0xFF0000,
+        content: 'Please provide a note to add.'
       });
     }
 
@@ -40,17 +38,12 @@ export default {
         await logModAction(message, 'note', user, note);
 
         await sendMessage(message, {
-          title: 'Done👍',
-          description: `Added note to ${userTag}'s record.`,
-          color: 0x00FF00,
-          timestamp: true
+          content: `Ok, added note to ${userTag}'s record.`
         });
         return;
       } catch (err) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'Could not find that user.',
-          color: 0xFF0000,
+          content: 'Could not find that user.'
         });
       }
     }
@@ -59,10 +52,7 @@ export default {
     await logModAction(message, 'note', target.user, note);
 
     await sendMessage(message, {
-      title: 'Done👍',
-      description: `Added note to ${target.user.tag}'s record.`,
-      color: 0x00FF00,
-      timestamp: true
+      content: `Ok, added note to ${target.user.tag}'s record.`
     });
   }
 }; 

@@ -43,10 +43,7 @@ export default {
         }
 
         await sendMessage(message, {
-          title: 'Done👍',
-          description: `${userTag} was warned for: ${reason}`,
-          color: 0x00FF00,
-          timestamp: true
+          content: `Ok, ${userTag} was warned for: ${reason}`
         });
 
         await logModAction(message, 'warn', user, reason);

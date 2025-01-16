@@ -10,9 +10,7 @@ export default {
   execute: async (message, args) => {
     if (!args[0]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a valid user tag or ID to unban.',
-        color: 0xFF0000,
+        content: 'Please provide a valid user tag or ID to unban.'
       });
     }
 
@@ -24,9 +22,7 @@ export default {
         target = await message.client.users.fetch(args[0]);
       } catch (err) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'Could not find that user.',
-          color: 0xFF0000,
+          content: 'Could not find that user.'
         });
       }
     }
@@ -41,19 +37,14 @@ export default {
       await message.guild.bans.remove(target, reason);
 
       await sendMessage(message, {
-        title: 'Done👍',
-        description: `${target.tag} was unbanned.`,
-        color: 0x00FF00,
-        timestamp: true
+        content: `${target.tag} was unbanned.`
       });
 
       await logModAction(message, 'unban', target, reason);
     } catch (error) {
       console.error(error);
       await sendMessage(message, {
-        title: 'Error',
-        description: 'Could not find that user or they are not banned.',
-        color: 0xFF0000,
+        content: 'Could not find that user or they are not banned.'
       });
     }
   }

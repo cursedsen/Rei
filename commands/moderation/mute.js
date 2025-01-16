@@ -9,9 +9,7 @@ export default {
   async execute(message, args) {
     if (!args[0]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a valid user tag or ID to mute.',
-        color: 0xFF0000,
+        content: 'Please provide a valid user tag or ID to mute.'
       });
     }
 
@@ -20,9 +18,7 @@ export default {
 
     if (!target) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Could not find that user.',
-        color: 0xFF0000,
+        content: 'Could not find that user.'
       });
     }
     if (target.id === message.author.id) {
@@ -32,9 +28,7 @@ export default {
     }
     if (!target.moderatable) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'I cannot mute this user. They may have higher permissions than me.',
-        color: 0xFF0000,
+        content: 'I cannot mute this user. They may have higher permissions than me.'
       });
     }
 
@@ -49,9 +43,7 @@ export default {
     if (!timeString || !['m', 'h', 'd'].some(unit => timeString.endsWith(unit))) {
       if (!muteRole) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'No mute role has been set up for permanent mutes. Please set one up using the config command or provide a valid duration (e.g. 1h, 30m, 1d).',
-          color: 0xFF0000,
+          content: 'No mute role has been set up for permanent mutes. Please set one up using the config command or provide a valid duration (e.g. 1h, 30m, 1d).'
         });
       }
       isPermanent = true;
@@ -63,9 +55,7 @@ export default {
       if (isNaN(duration) || duration <= 0) {
         if (!muteRole) {
           return await sendMessage(message, {
-            title: 'Error',
-            description: 'Invalid duration and no mute role set up for permanent mutes.',
-            color: 0xFF0000,
+            content: 'Invalid duration and no mute role set up for permanent mutes.'
           });
         }
         isPermanent = true;
@@ -94,17 +84,12 @@ export default {
       }
 
       await sendMessage(message, {
-        title: 'Done👍',
-        description: `${target.user.tag} was ${isPermanent ? 'permanently' : 'temporarily'} muted for: ${reason}`,
-        color: 0x00FF00,
-        timestamp: true
+        content: `Ok, ${target.user.tag} was ${isPermanent ? 'permanently' : 'temporarily'} muted for: ${reason}`
       });
     } catch (error) {
       console.error(error);
       await sendMessage(message, {
-        title: 'Error',
-        description: 'An error occurred while trying to mute the user.',
-        color: 0xFF0000,
+        content: 'An error occurred while trying to mute the user.'
       });
     }
   }

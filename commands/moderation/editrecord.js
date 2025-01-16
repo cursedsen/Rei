@@ -11,17 +11,13 @@ export default {
   execute: async (message, args) => {
     if (!args[0]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a Case ID to edit.',
-        color: 0xFF0000,
+        content: 'Please provide a case ID to edit.'
       });
     }
 
     if (!args[1]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a new reason for the record.',
-        color: 0xFF0000,
+        content: 'Please provide a new reason for the record.'
       });
     }
 
@@ -41,9 +37,7 @@ export default {
 
       if (!record) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'Could not find a record with that Case ID in this server.',
-          color: 0xFF0000,
+          content: 'Could not find a record with that Case ID in this server.'
         });
       }
 
@@ -56,19 +50,13 @@ export default {
       const targetTag = targetUser ? targetUser.tag : 'Unknown User';
 
       await sendMessage(message, {
-        title: 'Record Updated',
-        description: `Updated record ${caseId} for ${targetTag}\n` +
-          `**New Reason:** ${newReason}`,
-        color: 0x00FF00,
-        timestamp: true
+        content: `Ok, updated record ${caseId} for ${targetTag}\n**New Reason:** ${newReason}`
       });
 
     } catch (error) {
       console.error(error);
       await sendMessage(message, {
-        title: 'Error',
-        description: 'An error occurred while trying to update the record.',
-        color: 0xFF0000,
+        content: 'An error occurred while trying to update the record.'
       });
     } finally {
       await db.close();

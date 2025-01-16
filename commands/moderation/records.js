@@ -11,9 +11,7 @@ export default {
   async execute(message, args) {
     if (!args[0]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a user mention or ID to look up.',
-        color: 0xFF0000
+        content: 'Please provide a user mention or ID to look up.'
       });
     }
 
@@ -30,9 +28,7 @@ export default {
         userAvatar = user.displayAvatarURL();
       } catch (err) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'Could not find that user.',
-          color: 0xFF0000
+          content: 'Could not find that user.'
         });
       }
     } else {
@@ -56,10 +52,7 @@ export default {
 
     if (records.length === 0) {
       return await sendMessage(message, {
-        title: 'Member Records',
-        description: `**${userTag}**\n has no violations on record.`,
-        color: 0x00FF00,
-        thumbnail: userAvatar
+        content: `**${userTag}**\n has no violations on record.`
       });
     }
 

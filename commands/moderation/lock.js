@@ -1,5 +1,6 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
 import { logModAction } from '../../functions/auditLogger.js';
+import { LOCKED, OK } from 'sqlite3';
 
 export default {
   name: 'lock',
@@ -16,10 +17,7 @@ export default {
       });
 
       await sendMessage(message, {
-        title: '🔒 Channel Locked',
-        description: `This channel has been locked.\nReason: ${reason}`,
-        color: 0xFF0000,
-        timestamp: true
+        content: `Ok, channel locked`
       });
 
       await logModAction(message, 'lock', null, `Channel: ${message.channel.name} | ${reason}`);

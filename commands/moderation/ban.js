@@ -12,9 +12,7 @@ export default {
   execute: async (message, args) => {
     if (!args[0]) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'Please provide a valid user tag or ID to ban.',
-        color: 0xFF0000,
+        content: 'Please provide a valid user tag or ID to ban.'
       });
     }
 
@@ -75,16 +73,12 @@ export default {
         } catch (error) {
           console.error(error);
           return await sendMessage(message, {
-            title: 'Error',
-            description: 'An error occurred while trying to ban the user.',
-            color: 0xFF0000,
+            content: 'An error occurred while trying to ban the user.'
           });
         }
       } catch (err) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'Could not find that user.',
-          color: 0xFF0000,
+          content: 'Could not find that user.'
         });
       }
     }
@@ -97,9 +91,7 @@ export default {
 
     if (!target.moderatable) {
       return await sendMessage(message, {
-        title: 'Error',
-        description: 'I cannot ban this user. They may have higher permissions than me.',
-        color: 0xFF0000,
+        content: 'I cannot ban this user. They may have higher permissions than me.'
       });
     }
 
@@ -132,9 +124,7 @@ export default {
     } catch (error) {
       console.error(error);
       await sendMessage(message, {
-        title: 'Error',
-        description: 'An error occurred while trying to ban the user.',
-        color: 0xFF0000,
+        content: 'An error occurred while trying to ban the user.'
       });
     }
   }

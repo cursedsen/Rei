@@ -18,9 +18,7 @@ export default {
 
       if (!targetModerator) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'Could not find that user.',
-          color: 0xFF0000
+          content: 'Could not find that user.'
         });
       }
     } else {
@@ -41,9 +39,7 @@ export default {
 
       if (!db) {
         return await sendMessage(message, {
-          title: 'Error',
-          description: 'Failed to connect to the database.',
-          color: 0xFF0000
+          content: 'Failed to connect to the database.'
         });
       }
 
