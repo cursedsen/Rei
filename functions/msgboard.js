@@ -97,7 +97,17 @@ export async function handleStarboard(reaction, user) {
       if (existingStarMessage) {
         const starMessage = await starboardChannel.messages.fetch(existingStarMessage);
         if (starMessage) {
-          await sendMessage(starMessage, messageOptions);
+          await starMessage.edit({
+            content: messageOptions.content,
+            embeds: [{
+              description: messageOptions.description,
+              color: messageOptions.color,
+              author: messageOptions.author,
+              footer: messageOptions.footer,
+              timestamp: messageOptions.timestamp,
+              image: messageOptions.image ? { url: messageOptions.image } : null
+            }]
+          });
         }
       } else {
         const starMessage = await sendMessage(starboardChannel, messageOptions);
