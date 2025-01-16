@@ -62,7 +62,7 @@ export default {
 		}
 
 		const setting = args[0].toLowerCase();
-		const value = args[1];
+		const value = args[1]?.toLowerCase();
 
 		const settingMap = {
 			joinleave: "log_channel_join_leave",
@@ -86,13 +86,22 @@ export default {
 
 		try {
 			if (['joinleave', 'modaudit', 'edits', 'deletions', 'profiles', 'starboard'].includes(setting)) {
+				if (!value || value === 'none' || value === 'clear') {
+					await updateServerConfig(message.guild.id, settingMap[setting], null);
+					return await sendMessage(message, {
+						title: "Success",
+						description: `Cleared ${setting} channel setting.`,
+						color: 0x57f287,
+					});
+				}
+
 				const channel = message.mentions.channels.first() ||
 					message.guild.channels.cache.get(value);
 
 				if (!channel) {
 					return await sendMessage(message, {
 						title: "Error",
-						description: "Please mention a valid channel or provide a channel ID.",
+						description: "Please mention a valid channel, provide a channel ID, or use 'none' to clear the setting.",
 						color: 0xff0000,
 					});
 				}
