@@ -1,6 +1,7 @@
 import { sendMessage } from '../../functions/reiMessageMaker.js';
 import { logModAction } from '../../functions/auditLogger.js';
-import { LOCKED, OK } from 'sqlite3';
+import sqlite3 from 'sqlite3';
+const { LOCKED, OK } = sqlite3;
 
 export default {
   name: 'lock',
