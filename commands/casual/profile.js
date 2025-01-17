@@ -5,7 +5,7 @@ export default {
   description: 'View profile information for yourself or another user',
   category: 'casual',
   usage: '[user]/[userid]',
-  aliases: ['user', 'userinfo', 'userinfo'],
+  aliases: ['user', 'userinfo'],
   async execute(message, args) {
     let target;
 
@@ -26,7 +26,7 @@ export default {
               '*User is not in this server*'
             ].join('\n'),
             color: 0xFFD700,
-            thumbnail: user.displayAvatarURL({ dynamic: true, size: 1024 }),
+            thumbnail: { url: user.displayAvatarURL({ dynamic: true, size: 1024 }) },
             timestamp: true
           });
         } catch {
@@ -49,23 +49,21 @@ export default {
       .map(role => `<@&${role.id}>`)
       .join(', ') || 'No roles';
 
-    const description = [
-      `**Username:**\n${target.user.tag}`,
-      `**ID:**\n\`\`\`${target.id}\`\`\``,
-      `**Created:**\n<t:${Math.floor(createdAt.getTime() / 1000)}:R>`,
-      '',
-      `**Nickname:**\n${target.nickname || 'None'}`,
-      `**Joined:**\n<t:${Math.floor(joinedAt.getTime() / 1000)}:R>`,
-      '',
-      `**Roles [${target.roles.cache.size - 1}]**`,
-      roles
-    ].join('\n');
-
     await sendMessage(message, {
       title: `${target.user.displayName}'s Profile`,
-      description: description,
+      description: [
+        `**Username:**\n${target.user.tag}`,
+        `**ID:**\n\`\`\`${target.id}\`\`\``,
+        `**Created:**\n<t:${Math.floor(createdAt.getTime() / 1000)}:R>`,
+        '',
+        `**Nickname:**\n${target.nickname || 'None'}`,
+        `**Joined:**\n<t:${Math.floor(joinedAt.getTime() / 1000)}:R>`,
+        '',
+        `**Roles [${target.roles.cache.size - 1}]**`,
+        roles
+      ].join('\n'),
       color: 0xFFD700,
-      thumbnail: target.user.displayAvatarURL({ dynamic: true, size: 1024 }),
+      thumbnail: { url: target.user.displayAvatarURL({ dynamic: true, size: 1024 }) },
       timestamp: true
     });
   }

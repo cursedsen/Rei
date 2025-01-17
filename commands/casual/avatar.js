@@ -7,18 +7,29 @@ export default {
   usage: 'avatar [main/server] [user]',
   aliases: ['av', 'pfp', 'profilepicture'],
   async execute(message, args) {
-    const user = message.mentions.users.first() || message.author;
-    const member = message.mentions.members.first() || message.member;
-
-    let avatarUrl;
+    let user, member;
     const type = args[0]?.toLowerCase();
 
+    if (type === 'main' || type === 'server') {
+      user = message.mentions.users.first() || 
+        await message.client.users.fetch(args[1]).catch(() => null) ||
+        message.author;
+    } else {
+      user = message.mentions.users.first() || 
+        await message.client.users.fetch(args[0]).catch(() => null) ||
+        message.author;
+    }
+
+    member = message.mentions.members.first() ||
+      await message.guild.members.fetch(user.id).catch(() => null);
+
+    let avatarUrl;
     if (type === 'main') {
       avatarUrl = user.displayAvatarURL({ size: 4096 });
-    } else if (type === 'server') {
+    } else if (type === 'server' && member) {
       avatarUrl = member.displayAvatarURL({ size: 4096 });
     } else {
-      avatarUrl = member.avatarURL({ size: 4096 }) || user.displayAvatarURL({ size: 4096 });
+      avatarUrl = member?.avatarURL({ size: 4096 }) || user.displayAvatarURL({ size: 4096 });
     }
 
     await sendMessage(message, {
